@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('art', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="Art — nino" description="Paintings, Drawings, Digital art, generative experiments and visual explorations.">
+  <div class="list-page">
+    <header class="list-page__header">
+      <div class="section-label">03 / Art</div>
+      <h1 class="list-page__title">Visual experiments</h1>
+      <p class="list-page__sub">Generative work, digital art and things made to see what happens.</p>
+    </header>
+    <div>
+      {posts.map(post => (
+        <PostCard
+          title={post.data.title}
+          date={post.data.date}
+          excerpt={post.data.excerpt}
+          href={`/art/${post.id}`}
+          section="art"
+          meta={[post.data.medium, post.data.tools?.join(', ')].filter(Boolean).join(' · ')}
+        />
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .list-page { max-width: var(--max-w); margin: 0 auto; padding: 80px 48px 120px; }
+  .list-page__header { margin-bottom: 64px; }
+  .list-page__title { font-size: clamp(36px, 5vw, 64px); color: var(--color-text); margin-bottom: 16px; }
+  .list-page__sub { font-family: var(--font-body); font-size: 18px; color: var(--color-muted); font-style: italic; }
+  @media (max-width: 640px) { .list-page { padding: 48px 20px 80px; } }
+</style>

@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('life', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="Life — nino" description="Writing about life in Banja Luka and everything else.">
+  <div class="list-page">
+    <header class="list-page__header">
+      <div class="section-label">04 / Life</div>
+      <h1 class="list-page__title">Life in general</h1>
+      <p class="list-page__sub">Banja Luka, Charlie, bass guitar and whatever else is going on.</p>
+    </header>
+    <div>
+      {posts.map(post => (
+        <PostCard
+          title={post.data.title}
+          date={post.data.date}
+          excerpt={post.data.excerpt}
+          href={`/life/${post.id}`}
+          section="life"
+        />
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .list-page { max-width: var(--max-w); margin: 0 auto; padding: 80px 48px 120px; }
+  .list-page__header { margin-bottom: 64px; }
+  .list-page__title { font-size: clamp(36px, 5vw, 64px); color: var(--color-text); margin-bottom: 16px; }
+  .list-page__sub { font-family: var(--font-body); font-size: 18px; color: var(--color-muted); font-style: italic; }
+  @media (max-width: 640px) { .list-page { padding: 48px 20px 80px; } }
+</style>

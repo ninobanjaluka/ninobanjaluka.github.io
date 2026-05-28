@@ -1,0 +1,78 @@
+---
+interface Props {
+  title: string;
+  date: Date;
+  excerpt: string;
+  href: string;
+  section: 'photography' | 'code' | 'life' | 'art';
+  meta?: string;
+}
+
+const { title, date, excerpt, href, section, meta } = Astro.props;
+
+const dateStr = date.toLocaleDateString('en-GB', {
+  day: 'numeric', month: 'short', year: 'numeric',
+});
+
+const sectionLabel = { photography: 'Photography', code: 'Code', life: 'Life', art: 'Art' };
+---
+
+<a href={href} class="card">
+  <div class="card__left">
+    <div class="card__date">{dateStr}</div>
+    <span class={`tag tag--${section}`}>{sectionLabel[section]}</span>
+  </div>
+  <div class="card__body">
+    <h2 class="card__title">{title}</h2>
+    <p class="card__excerpt">{excerpt}</p>
+    {meta && <div class="card__meta">{meta}</div>}
+  </div>
+  <div class="card__right">
+    <div class="card__arrow">→</div>
+  </div>
+</a>
+
+<style>
+  .card {
+    display: grid;
+    grid-template-columns: 120px 1fr 48px;
+    gap: 28px; align-items: start;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--color-border);
+    cursor: pointer; transition: background 0.2s;
+    text-decoration: none;
+  }
+  .card:hover { background: rgba(255,255,255,0.02); }
+  .card:hover .card__title { color: var(--color-accent); }
+  .card:hover .card__arrow { color: var(--color-accent); opacity: 1; }
+  .card__date {
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--color-hint); margin-bottom: 8px;
+  }
+  .card__title {
+    font-family: var(--font-serif); font-size: 22px;
+    font-weight: 400; color: var(--color-text);
+    margin-bottom: 10px; line-height: 1.25;
+    transition: color 0.2s;
+  }
+  .card__excerpt {
+    font-family: var(--font-body); font-size: 16px;
+    color: var(--color-muted); line-height: 1.6;
+  }
+  .card__meta {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.08em; color: var(--color-hint); margin-top: 10px;
+  }
+  .card__right { text-align: right; padding-top: 4px; }
+  .card__arrow {
+    font-family: var(--font-mono); font-size: 18px;
+    color: var(--color-hint); opacity: 0.4;
+    transition: color 0.2s, opacity 0.2s;
+  }
+  @media (max-width: 640px) {
+    .card { grid-template-columns: 1fr; gap: 12px; padding: 24px 0; }
+    .card__left { display: flex; gap: 12px; align-items: center; }
+    .card__right { display: none; }
+  }
+</style>

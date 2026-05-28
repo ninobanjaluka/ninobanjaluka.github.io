@@ -1,0 +1,21 @@
+{
+  "name": "nino-portfolio",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "6.3.8",
+    "@astrojs/mdx": "^5.0.6",
+    "@astrojs/rss": "^4.0.18",
+    "@astrojs/sitemap": "^3.7.2"
+  },
+  "overrides": {
+    "@astrojs/mdx": {
+      "astro": "6.3.8"
+    }
+  }
+}

@@ -1,0 +1,59 @@
+---
+title: "Termux as a Real Development Environment"
+date: 2026-02-08
+excerpt: "Running agents, SSH tunnels and automation scripts on Android — a surprisingly capable setup."
+tech: ["Termux", "Android", "SSH", "Tailscale"]
+tags: ["android", "termux", "mobile-dev", "ssh"]
+---
+
+I have a phone running Android 16, a tablet on Android 11, and a Nexus 7 that has no business still being useful. All three are connected via Tailscale. All three run Termux. Together they form a surprisingly capable distributed environment for someone who spends a lot of time away from a desk.
+
+## Why Termux
+
+If you're not familiar: Termux is a terminal emulator and Linux environment for Android that doesn't require root. It has its own package manager (`pkg`), a real shell, and enough packages to do actual work. It's free, and the version you want is from F-Droid — the Play Store version is outdated.
+
+## What I actually use it for
+
+**SSH access everywhere.** I run `sshd` on each device, auto-started on boot via Termux:Boot. Combined with Tailscale, I can SSH from any device to any other device on my network regardless of where I am. This is genuinely useful when the MacPro is doing something and I only have the phone.
+
+**Running agents.** Hermes Agent runs on Termux on the phone. It's slower than on the MacPro, obviously, but for tasks that aren't time-sensitive it works fine. The config lives in `~/.hermes/.env` same as the desktop version.
+
+**Automation scripts.** Simple bash scripts that run on a schedule via Termux:Boot — checking things, sending notifications, keeping services alive.
+
+## Termux:Boot setup
+
+This is the part that trips people up. You need to install the Termux:Boot add-on (from F-Droid, same as Termux itself). Then create the scripts directory:
+
+```bash
+mkdir -p ~/.termux/boot
+```
+
+Any script in that directory runs on device boot. Here's what my `sshd.sh` looks like:
+
+```bash
+#!/data/data/com.termux/files/usr/bin/bash
+# Start SSH daemon on boot
+sshd
+```
+
+Make it executable:
+
+```bash
+chmod +x ~/.termux/boot/sshd.sh
+```
+
+Then open the Termux:Boot app once to enable it. That's it.
+
+## Tailscale on Android
+
+Install from Play Store. Sign in. Every device on the tailnet can now reach every other device by its Tailscale IP or hostname, through NAT, from anywhere. The phone can SSH to the MacPro over 4G. The MacPro can reach the phone if it needs to. Nothing is exposed to the public internet.
+
+## The Nexus 7 problem
+
+It runs Android 5.1. Termux still installs. The package versions are ancient. Half the things I try to do on it fail due to glibc version mismatches. But it runs sshd fine and serves as a useful always-on terminal when plugged in. For seven euros at a flea market, I'm not complaining.
+
+## What doesn't work well
+
+Anything CPU-intensive. Local LLM inference is too slow to be useful on phone hardware — I offload that to the MacPro via the gateway. Also, copy-paste between terminal and the rest of Android is still a small daily annoyance in 2026.
+
+Worth it overall. The SSH-everywhere setup alone has saved me enough times to justify the initial configuration time.

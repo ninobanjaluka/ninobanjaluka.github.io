@@ -1,0 +1,58 @@
+---
+title: "Building a Self-Hosted AI Gateway on Intel Mac"
+date: 2026-04-20
+excerpt: "Why I run my own LLM routing layer instead of calling APIs directly — and what the setup actually looks like."
+tech: ["Node.js", "launchd", "Telegram", "OpenClaw"]
+tags: ["devlog", "self-hosted", "llm", "macos"]
+---
+
+Most people who use AI APIs just call them directly. A key in a `.env` file, a fetch call, done. I went in a different direction, and I've been running my own local gateway for several months now. Here's why, and what it looks like under the hood.
+
+## Why a gateway at all?
+
+Three reasons:
+
+**Fallback routing.** If my primary provider is down or rate-limited, I want requests to automatically go to a secondary. Without a gateway, that logic lives in every app that calls an LLM. With a gateway, it lives in one place.
+
+**Local model support.** I run KoboldCpp for inference on local GGUF models. A gateway lets me route some requests there — cheaper for tasks that don't need a frontier model.
+
+**A single endpoint.** My Telegram bot, my cron jobs, my CLI tools — they all talk to `localhost:18789`. Swapping providers means changing config in one file, not hunting through every project.
+
+## The hardware
+
+Intel MacPro, x86_64. This matters because most AI tooling in 2026 assumes Apple Silicon or a CUDA GPU. I have neither. Metal acceleration isn't available on the MacPro's architecture, and while I have an AMD Radeon on the MacBook, llama.cpp doesn't play nicely with it for inference.
+
+So everything runs on CPU. KoboldCpp is the most efficient option I've found — roughly 30% faster than Ollama on this hardware for the same GGUF models.
+
+## The stack
+
+```
+OpenClaw (gateway, port 18789)
+  ├── Provider: Anthropic Claude (primary)
+  ├── Provider: OpenAI (fallback)
+  ├── Provider: KoboldCpp localhost (local)
+  └── Memory: QMD vector backend
+```
+
+OpenClaw runs as a launchd service so it starts on boot and restarts on crash. The plist lives in `~/Library/LaunchAgents/`.
+
+## Memory
+
+This was the hardest part to get right. The QMD backend uses node-llama-cpp for embedding, which on first run tried to detect CUDA and failed noisily. The fix was setting `GGML_CUDA=0` in the launchd environment dictionary.
+
+After that, vector memory works reliably. The agent — I call it Hal — can reference things from previous conversations, which makes the daily briefing cron jobs considerably more useful.
+
+## Telegram integration
+
+Every morning at 08:00, a cron job asks Hal for a weather and news briefing for Banja Luka. The response comes back as a Telegram message via the bot. It takes about four seconds from trigger to delivery. It's one of those small automations that makes the whole setup feel worth it.
+
+```bash
+# Jutro cron — 08:00 daily
+0 8 * * * /usr/local/bin/openclaw run --prompt "Morning briefing: weather and headlines for Banja Luka today"
+```
+
+## What I'd do differently
+
+The launchd environment variable situation is fiddly. Every time you change a key you need to `launchctl unload` and `launchctl load` the plist. I've scripted this but it still catches me out when I'm debugging at 11pm.
+
+Otherwise — it works. Stable for months. Worth the setup time.
