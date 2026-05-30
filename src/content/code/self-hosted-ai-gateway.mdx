@@ -1,40 +1,41 @@
 ---
 title: "Building a Self-Hosted AI Gateway on Intel Mac"
 date: 2026-04-20
-excerpt: "Why I run my own LLM routing layer instead of calling APIs directly — and what the setup actually looks like."
+excerpt: "As an experiment I was running my own LLM routing layer instead of calling APIs directly — and this is short gist of it and what the setup actually looked like."
 tech: ["Node.js", "launchd", "Telegram", "OpenClaw"]
 tags: ["devlog", "self-hosted", "llm", "macos"]
 ---
 
-Most people who use AI APIs just call them directly. A key in a `.env` file, a fetch call, done. I went in a different direction, and I've been running my own local gateway for several months now. Here's why, and what it looks like under the hood.
+Most people who use AI APIs just call them directly. A key in a `.env` file, a fetch call, done. I was looking at the model relay solution and I went in that  different direction, and I've been running my own local routing for several months now. Here's why, and what it looks like under the hood.
 
-## Why a gateway at all?
+## Why model routing at all?
 
 Three reasons:
 
-**Fallback routing.** If my primary provider is down or rate-limited, I want requests to automatically go to a secondary. Without a gateway, that logic lives in every app that calls an LLM. With a gateway, it lives in one place.
+**Fallback routing.** If my primary provider is down or rate-limited, I want requests to automatically go to a secondary. Without a router, that logic lives in every app that was not possible, at least not at the time i ran the experiment "Two Routers-7 agents".
 
-**Local model support.** I run KoboldCpp for inference on local GGUF models. A gateway lets me route some requests there — cheaper for tasks that don't need a frontier model.
+**Local model support.** I run KoboldCpp, Llama.cpp and Ollama for inference on local GGUF models, depending on the use case. A model relay lets me route some requests there — cheaper for tasks that don't need a frontier model.
 
-**A single endpoint.** My Telegram bot, my cron jobs, my CLI tools — they all talk to `localhost:18789`. Swapping providers means changing config in one file, not hunting through every project.
+**A single endpoint.** My Telegram bot, my cron jobs, my CLI tools — they all talk to `localhost`. Swapping providers means changing config in one file, not hunting through every project.
 
 ## The hardware
 
 Intel MacPro, x86_64. This matters because most AI tooling in 2026 assumes Apple Silicon or a CUDA GPU. I have neither. Metal acceleration isn't available on the MacPro's architecture, and while I have an AMD Radeon on the MacBook, llama.cpp doesn't play nicely with it for inference.
 
 So everything runs on CPU. KoboldCpp is the most efficient option I've found — roughly 30% faster than Ollama on this hardware for the same GGUF models.
+The trick in Kobolds sleeve is offloading some layers to AMD gpu. My MAC loves it, and hates Ollama so much it spins up fans in 2 minutes, tops.
 
 ## The stack
 
 ```
-OpenClaw (gateway, port 18789)
-  ├── Provider: Anthropic Claude (primary)
+OpenClaw/Hermes (gateway, port 18789etc)
+  ├── Provider: Anthropic Claude or Whatever (primary)
   ├── Provider: OpenAI (fallback)
   ├── Provider: KoboldCpp localhost (local)
   └── Memory: QMD vector backend
 ```
 
-OpenClaw runs as a launchd service so it starts on boot and restarts on crash. The plist lives in `~/Library/LaunchAgents/`.
+OpenClaw runs as a launchd service, Hermes is doing it on its own, so all starts on boot and restarts on crash. The plist lives in `~/Library/LaunchAgents/`.
 
 ## Memory
 
@@ -56,3 +57,4 @@ Every morning at 08:00, a cron job asks Hal for a weather and news briefing for 
 The launchd environment variable situation is fiddly. Every time you change a key you need to `launchctl unload` and `launchctl load` the plist. I've scripted this but it still catches me out when I'm debugging at 11pm.
 
 Otherwise — it works. Stable for months. Worth the setup time.
+To Experiment is to Live, at least for me, and it doesn't matter is it a code, paint or a tune. YOLO.
