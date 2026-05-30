@@ -1,0 +1,108 @@
+---
+title: "Making Of Obsidian Mac TTS Plugin"
+date: 2026-05-30
+excerpt: "How I Built a Local TTS Plugin for Obsidian on Mac (And Why It Was Harder Than It Should Be)"
+tech: ["Obsidian", "Mac", "http", "JavaScript"]
+tags: ["Mac", "say", "tts", "local"]
+---
+
+I use Obsidian for everything. Notes, ideas, journal entries, research — it all lives there. And for a while, I had a great setup: a text-to-speech plugin that would read my notes back to me while I was doing other things. Then it stopped working. The plugin relied on an external TTS service that changed its API, and just like that, silence.
+
+So I decided to build my own.
+
+---
+
+## The Idea
+
+Every Mac ships with a command called `say`. Open Terminal, type `say hello`, and your Mac talks to you. It supports dozens of high-quality voices — Samantha, Ava, Daniel — and it works completely offline, no API keys, no internet, no subscription. It's been sitting there all along, built into macOS.
+
+The idea was simple: wrap `say` inside an Obsidian plugin. Click a button, your note gets read aloud. That's it.
+
+Simple ideas have a way of getting complicated.
+
+---
+
+## The First Wall: TypeScript and the Build System
+
+Obsidian plugins are written in TypeScript and need to be compiled before they work. The standard approach is to clone an example plugin from GitHub, modify it, and run `npm run build`.
+
+What nobody tells you is that the example plugin has a `src/` folder with the real source files, and a `main.ts` in the root that does nothing. I edited the wrong file three times before figuring that out.
+
+Then there were TypeScript errors. Then build errors. Then the compiled `main.js` would load but silently fail to register any commands because the plugin API expects specific patterns that the example plugin doesn't explain.
+
+Eventually I stepped back and asked: do I actually need TypeScript? The answer was no. Obsidian loads plain JavaScript just fine. I threw away the build system entirely and wrote `main.js` directly.
+
+---
+
+## The Second Wall: Obsidian's Security Model
+
+Obsidian runs inside Electron, which is essentially a locked-down browser. When I tried to call my local TTS server using `fetch()`, Obsidian blocked it. Content Security Policy. The browser sandbox doesn't trust localhost connections made from plugins.
+
+The fix? Electron gives plugins access to Node.js core modules. Instead of `fetch()`, I used the `http` module — which bypasses the browser sandbox entirely because it runs at the system level, not the browser level. Once I made that switch, the connection worked immediately.
+
+---
+
+## Ditching the Server Altogether
+
+At some point I realized I was running a local server just to call a command that was already on the machine. The TTS server was itself just a wrapper around `say`. So I removed the server completely.
+
+The new approach uses Node.js `child_process` to call `say` directly:
+
+```javascript
+const proc = child_process.spawn('say', ['-v', 'Samantha', '-r', '175', text]);
+```
+
+This is cleaner, faster, and means any Mac user can install the plugin and it works immediately — no server to set up, no Python environment, nothing.
+
+---
+
+## Features That Made It In
+
+By the end, the plugin had:
+
+- **Speak entire note** — reads the whole note, paragraph by paragraph
+- **Pause and resume** — using Unix signals (`SIGSTOP` and `SIGCONT`) sent directly to the `say` process
+- **Stop playback** — kills the process instantly
+- **Save as MP3** — uses `say` to generate an AIFF file, then `afconvert` (also built into macOS) to convert it to MP3, saved to your Downloads folder
+- **Settings panel** — voice selector that reads all installed voices from the system, and a speed slider from 100 to 400 words per minute
+- **Ribbon buttons** for everything
+
+---
+
+## The Thing That Didn't Make It
+
+I spent more time than I'd like to admit trying to get "speak selected text" working from a ribbon button. The problem is fundamental: when you click a ribbon button, Obsidian moves focus away from the editor. By the time the plugin runs, the selection is gone.
+
+There are workarounds — caching the selection on every keypress, for example — but every approach I tried introduced other problems. In the end I left it out. A clean plugin that does what it says is better than a broken plugin that tries to do everything.
+
+---
+
+## Saving to MP3
+
+The save feature took the longest to get right. The `say` command saves audio in AIFF format, not MP3. Converting between them requires `afconvert`, a macOS command-line tool most people have never heard of even though it ships with every Mac.
+
+The pipeline looks like this:
+
+```
+say → output.aiff → afconvert → output.mp3 → delete output.aiff
+```
+
+Getting the format flags right for `say` took several attempts. The flag `--data-format=aiff` that shows up in various guides online doesn't actually work. The correct approach is to just use `-o filename.aiff` and let `say` figure out the format from the extension.
+
+---
+
+## Publishing
+
+The plugin is open source and available on GitHub at [katnino/obsidian-mac-tts](https://github.com/katnino/obsidian-mac-tts). 
+
+It's macOS only, which is fine — `say` is a Mac thing. If you have a Mac and you use Obsidian, you can install it manually right now. Community plugin store submission is in progress.
+
+---
+
+## What I Learned
+
+Building an Obsidian plugin is more accessible than it looks, once you get past the TypeScript scaffolding. The plugin API is well-designed, the community is active, and Electron's access to Node.js opens up capabilities that browser-based tools can't touch. I find Obsidian a very powerful tool, and it's doing a great job across all of my devices.
+
+The bigger lesson: sometimes the best tool for the job has been sitting on your computer the whole time, waiting to be wired up.
+
+So that's it, that's the "story" of my obsidian plugin making.
