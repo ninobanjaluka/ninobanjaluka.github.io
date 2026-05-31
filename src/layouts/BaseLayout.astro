@@ -1,21 +1,21 @@
 ---
-import '../styles/global.css';
+import "../styles/global.css";
 
 interface Props {
-  title?: string;
-  description?: string;
+    title?: string;
+    description?: string;
 }
 
 const {
-  title = 'nino — photography, code, art & life',
-  description = 'Photography, coding adventures, art and life in Banja Luka.',
+    title = "nino — photography, code, art & life",
+    description = "Photography, coding adventures, art and life in Banja Luka.",
 } = Astro.props;
 
 const nav = [
-  { label: 'Photography', href: '/photography' },
-  { label: 'Code',        href: '/code' },
-  { label: 'Art',         href: '/art' },
-  { label: 'Life',        href: '/life' },
+    { label: "Photography", href: "/photography" },
+    { label: "Code", href: "/code" },
+    { label: "Art", href: "/art" },
+    { label: "Life", href: "/life" },
 ];
 
 const currentPath = Astro.url.pathname;
@@ -23,110 +23,192 @@ const currentPath = Astro.url.pathname;
 
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content={description} />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <title>{title}</title>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content={description} />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <title>{title}</title>
+    </head>
+    <body>
+        <nav class="nav" id="nav">
+            <a href="/" class="nav__logo"
+                >ninobanjaluka<span class="nav__dot">.</span></a
+            >
+            <div class="nav__links">
+                {
+                    nav.map(({ label, href }) => (
+                        <a
+                            href={href}
+                            class:list={[
+                                "nav__link",
+                                {
+                                    "nav__link--active":
+                                        currentPath.startsWith(href),
+                                },
+                            ]}
+                        >
+                            {label}
+                        </a>
+                    ))
+                }
+                <a href="/rss.xml" class="nav__rss">RSS</a>
+            </div>
+        </nav>
 
-<nav class="nav" id="nav">
-  <a href="/" class="nav__logo">ninobanjaluka<span class="nav__dot">.</span></a>
-  <div class="nav__links">
-    {nav.map(({ label, href }) => (
-      <a
-        href={href}
-        class:list={['nav__link', { 'nav__link--active': currentPath.startsWith(href) }]}
-      >{label}</a>
-    ))}
-    <a href="/rss.xml" class="nav__rss">RSS</a>
-  </div>
-</nav>
+        <main>
+            <slot />
+        </main>
 
-<main>
-  <slot />
-</main>
-
-<footer class="footer">
-  <div class="footer__logo">nino<span class="nav__dot">.</span></div>
-  <div class="footer__links">
-    <a href="https://github.com/katnino" target="_blank" rel="noopener">GitHub</a>
-    <a href="/rss.xml">RSS</a>
-  </div>
-  <div class="footer__location">Banja Luka · {new Date().getFullYear()}</div>
-</footer>
-
-</body>
+        <footer class="footer">
+            <div class="footer__logo">
+                nino katić<span class="nav__dot">.</span>
+            </div>
+            <div class="footer__links">
+                <a
+                    href="https://github.com/katnino"
+                    target="_blank"
+                    rel="noopener">GitHub</a
+                >
+                <a href="/rss.xml">RSS</a>
+            </div>
+            <div class="footer__location">
+                Banja Luka · {new Date().getFullYear()}
+            </div>
+        </footer>
+    </body>
 </html>
 
 <script>
-  const nav = document.getElementById('nav');
-  window.addEventListener('scroll', () => {
-    nav?.classList.toggle('nav--scrolled', window.scrollY > 60);
-  });
+    const nav = document.getElementById("nav");
+    window.addEventListener("scroll", () => {
+        nav?.classList.toggle("nav--scrolled", window.scrollY > 60);
+    });
 </script>
 
 <style>
-  .nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 48px; height: 64px;
-    transition: background 0.4s ease, backdrop-filter 0.4s ease, border-color 0.4s ease;
-    border-bottom: 1px solid transparent;
-  }
-  .nav--scrolled {
-    background: rgba(8,8,8,0.92);
-    backdrop-filter: blur(12px);
-    border-color: var(--color-border);
-  }
-  .nav__logo {
-    font-family: var(--font-serif); font-size: 22px;
-    font-weight: 600; letter-spacing: 0.02em; color: var(--color-text);
-  }
-  .nav__dot { color: var(--color-accent); }
-  .nav__links { display: flex; align-items: center; gap: 32px; }
-  .nav__link {
-    font-family: var(--font-mono); font-size: 11px;
-    letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--color-hint); padding-bottom: 2px;
-    border-bottom: 1px solid transparent;
-    transition: color 0.2s, border-color 0.2s;
-  }
-  .nav__link:hover, .nav__link--active {
-    color: var(--color-accent); border-color: var(--color-accent);
-  }
-  .nav__rss {
-    font-family: var(--font-mono); font-size: 11px;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--color-hint); border: 1px solid var(--color-border);
-    padding: 5px 14px; border-radius: 2px;
-    transition: color 0.2s, border-color 0.2s;
-  }
-  .nav__rss:hover { color: var(--color-accent); border-color: rgba(251,191,36,0.4); }
-  main { padding-top: 64px; }
-  .footer {
-    padding: 48px; border-top: 1px solid var(--color-border);
-    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
-  }
-  .footer__logo { font-family: var(--font-serif); font-size: 20px; color: var(--color-hint); }
-  .footer__links { display: flex; gap: 28px; }
-  .footer__links a {
-    font-family: var(--font-mono); font-size: 10px;
-    letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--color-hint); transition: color 0.2s;
-  }
-  .footer__links a:hover { color: var(--color-accent); }
-  .footer__location {
-    font-family: var(--font-mono); font-size: 9px;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    color: rgba(255,255,255,0.15);
-  }
-  @media (max-width: 640px) {
-    .nav { padding: 0 20px; }
-    .nav__links { gap: 18px; }
-    .nav__rss { display: none; }
-    .footer { padding: 32px 20px; }
-  }
+    .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 48px;
+        height: 64px;
+        transition:
+            background 0.4s ease,
+            backdrop-filter 0.4s ease,
+            border-color 0.4s ease;
+        border-bottom: 1px solid transparent;
+    }
+    .nav--scrolled {
+        background: rgba(8, 8, 8, 0.92);
+        backdrop-filter: blur(12px);
+        border-color: var(--color-border);
+    }
+    .nav__logo {
+        font-family: var(--font-serif);
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        color: var(--color-text);
+    }
+    .nav__dot {
+        color: var(--color-accent);
+    }
+    .nav__links {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+    }
+    .nav__link {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-hint);
+        padding-bottom: 2px;
+        border-bottom: 1px solid transparent;
+        transition:
+            color 0.2s,
+            border-color 0.2s;
+    }
+    .nav__link:hover,
+    .nav__link--active {
+        color: var(--color-accent);
+        border-color: var(--color-accent);
+    }
+    .nav__rss {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-hint);
+        border: 1px solid var(--color-border);
+        padding: 5px 14px;
+        border-radius: 2px;
+        transition:
+            color 0.2s,
+            border-color 0.2s;
+    }
+    .nav__rss:hover {
+        color: var(--color-accent);
+        border-color: rgba(251, 191, 36, 0.4);
+    }
+    main {
+        padding-top: 64px;
+    }
+    .footer {
+        padding: 48px;
+        border-top: 1px solid var(--color-border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+    .footer__logo {
+        font-family: var(--font-serif);
+        font-size: 20px;
+        color: var(--color-hint);
+    }
+    .footer__links {
+        display: flex;
+        gap: 28px;
+    }
+    .footer__links a {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-hint);
+        transition: color 0.2s;
+    }
+    .footer__links a:hover {
+        color: var(--color-accent);
+    }
+    .footer__location {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.15);
+    }
+    @media (max-width: 640px) {
+        .nav {
+            padding: 0 20px;
+        }
+        .nav__links {
+            gap: 18px;
+        }
+        .nav__rss {
+            display: none;
+        }
+        .footer {
+            padding: 32px 20px;
+        }
+    }
 </style>
