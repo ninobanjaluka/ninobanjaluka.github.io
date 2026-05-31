@@ -6,24 +6,22 @@ tech: ["Termux", "Android", "SSH", "Tailscale"]
 tags: ["android", "termux", "mobile-dev", "ssh"]
 ---
 
-I have a phone running Android 16, a tablet on Android 11, and a Nexus 7 that has no business still being useful. All three are connected via Tailscale. All three run Termux. Together they form a surprisingly capable distributed environment for someone who spends a lot of time away from a desk.
-
+I have a phone running Android 16, a tablet on Android 11, and a Nexus 7 that has no business still being useful, but it is. Very. All three are connected via Tailscale. All three run Termux and together,  they form a surprisingly capable distributed environment for someone who spends a lot of time away from a desk. Ok, not exactly, i spend almost every waking hoir behind the screen.
 ## Why Termux
 
 If you're not familiar: Termux is a terminal emulator and Linux environment for Android that doesn't require root. It has its own package manager (`pkg`), a real shell, and enough packages to do actual work. It's free, and the version you want is from F-Droid — the Play Store version is outdated.
 
 ## What I actually use it for
 
-**SSH access everywhere.** I run `sshd` on each device, auto-started on boot via Termux:Boot. Combined with Tailscale, I can SSH from any device to any other device on my network regardless of where I am. This is genuinely useful when the MacPro is doing something and I only have the phone.
+**SSH access everywhere.** I run `sshd` on each device, auto-started on boot via Termux:Boot. Combined with Tailscale, I can SSH from any device to any other device on my network regardless of am I in the house or watching Charlie taking a dump on the Vrbas river bank. This is genuinely useful when the MacPro is doing something and I only have the phone.
 
-**Running agents.** Hermes Agent runs on Termux on the phone. It's slower than on the MacPro, obviously, but for tasks that aren't time-sensitive it works fine. The config lives in `~/.hermes/.env` same as the desktop version.
+**Running agents.** Hermes Agent runs on Termux on the phone. It's just as powerful like on the MacPro, and for tasks that aren't time-sensitive it works flawlessly. The config lives in `~/.hermes/.env` same as the desktop version.
 
 **Automation scripts.** Simple bash scripts that run on a schedule via Termux:Boot — checking things, sending notifications, keeping services alive.
 
 ## Termux:Boot setup
 
 This is the part that trips people up. You need to install the Termux:Boot add-on (from F-Droid, same as Termux itself). Then create the scripts directory:
-
 ```bash
 mkdir -p ~/.termux/boot
 ```
