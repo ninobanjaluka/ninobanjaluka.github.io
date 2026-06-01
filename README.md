@@ -24,3 +24,13 @@ Hope You'll enjoy the ride.
 [▶️ View the site live](https://nin0banjaluka.github.io)
 
 ---
+
+## Copyright Notice
+
+© 2026 Nino Katić. All Rights Reserved.
+
+The content of this blog (text, articles, and especially all photographs and images) is copyrighted. 
+
+No part of this work may be reproduced, distributed, or transmitted in any form or by any means, including photocopying, recording, or other electronic or mechanical methods, without the prior written permission of the author, except in the case of brief quotations embodied in critical reviews and certain other noncommercial uses permitted by copyright law.
+
+For permissions or inquiries, please contact me.
