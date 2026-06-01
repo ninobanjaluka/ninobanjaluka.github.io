@@ -1,4 +1,26 @@
-# ninobanjaluka — portfolio & blog
-continued from https://ninobanjaluka.wordpress.com/
-Built with Astro 6. Four content sections: Photography, Code, Art, Life.
-As my wordpress free blog quota filled up over the decades, i decided to slow that one down, and spin up something new, so here it is , now in Astro cloak and trusty GiHub as a spine ( the pun intended). Hope you'll enjoy the ride.
+# ninobanjaluka — Portfolio & Blog
+
+[![Astro](https://img.shields.io/badge/Astro-6.0-FF5D01?logo=astro)](https://astro.build)
+[![License](https://img.shields.io/github/license/noniboy/noni-portfolio)](LICENSE)
+
+A personal portfolio and blog built with **Astro 6**. It showcases four curated content sections:
+
+- 📸 **Photography**  
+- 💻 **Code**  
+- 🎨 **Art**  
+- 🌱 **Life**
+
+---
+
+## 📖 About
+
+After years of publishing on WordPress, the free‑tier quota ran out. I migrated to a fast static site powered by Astro and hosted on GitHub Pages. This repository serves as a central hub for my work, thoughts, and creative projects.
+Hope You'll enjoy the ride.
+
+---
+
+## 🚀 Live
+
+[▶️ View the site live](https://nin0banjaluka.github.io)
+
+---
