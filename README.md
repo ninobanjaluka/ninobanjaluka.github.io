@@ -5,10 +5,10 @@
 
 A personal portfolio and blog built with **Astro 6**. It showcases four curated content sections:
 
-- 📸 **Photography**  
-- 💻 **Code**  
-- 🎨 **Art**  
-- 🌱 **Life**
+-  **Photography**  
+-  **Code**  
+-  **Art**  
+-  **Life**
 
 ---
 
@@ -19,7 +19,7 @@ Hope You'll enjoy the ride.
 
 ---
 
-## 🚀 Live
+##  Live
 
 [▶️ View the site live](https://nin0banjaluka.github.io)
 
