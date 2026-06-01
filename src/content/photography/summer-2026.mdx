@@ -1,0 +1,32 @@
+---
+title: "Summer 2026"
+date: 2026-06-01
+excerpt: "Heatwaves This Early Are Making Me Nervous"
+camera: "Canon EOS 5D Mark III"
+location: "Banja Luka"
+tags: ["gear", "film-look", "full-frame", "heatwave", "banjaluka"]
+---
+
+import { Image } from 'astro:assets';
+import photo1 from '../../assets/blog/klupa.jpg';
+import photo2 from '../../assets/blog/begovica-prozor.jpg';
+import photo3 from '../../assets/blog/borik.jpg'
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 40px 0;">
+  <div>
+    <Image 
+      src={photo1} 
+      alt="Klupa u hladovini" 
+      style="width: 100%; height: auto; border-radius: 8px; display: block;"
+    />
+  </div>
+  <div>
+    <Image 
+      src={photo2} 
+      alt="Prozor" 
+      style="width: 100%; height: auto; border-radius: 8px; display: block;"
+    />
+  </div>
+</div>
+
+<Image src={photo3} alt="Borik" />
