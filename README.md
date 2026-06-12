@@ -1,4 +1,4 @@
-# ninobanjaluka — Portfolio & Blog
+# ninobanjaluka  Portfolio & Blog
 
 [![Astro](https://img.shields.io/badge/Astro-6.0-FF5D01?logo=astro)](https://astro.build)
 [![License](https://img.shields.io/github/license/noniboy/noni-portfolio)](LICENSE)
@@ -14,7 +14,7 @@ A personal portfolio and blog built with **Astro 6**. It showcases four curate
 
 ## 📖 About
 
-After years of publishing on WordPress, the free‑tier quota is almost full, so I migrated to a fast static site powered by Astro and hosted on GitHub Pages. This repository serves as a central hub for my work, thoughts, and creative projects.
+After years of publishing on WordPress, the free‑tier quota is almost full, so I migrated to a fast static site powered by Astro and hosted on GitHub Pages. This repository serves as a central hub for my work, thoughts, and creative projects. Its' also a very personal and contains very important parts of my journey around the Sun. Journey we call  Life.
 Hope You'll enjoy the ride.
 
 ---
