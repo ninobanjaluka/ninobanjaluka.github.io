@@ -1,0 +1,143 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+    const [photography, code, life, art] = await Promise.all([
+        getCollection("photography"),
+        getCollection("code"),
+        getCollection("life"),
+        getCollection("art"),
+    ]);
+
+    const all = [
+        ...photography.map((p) => ({ ...p, section: "photography" as const })),
+        ...code.map((p) => ({ ...p, section: "code" as const })),
+        ...life.map((p) => ({ ...p, section: "life" as const })),
+        ...art.map((p) => ({ ...p, section: "art" as const })),
+    ].filter((p) => !p.data.draft);
+
+    const allTags = [...new Set(all.flatMap((p) => p.data.tags ?? []))];
+
+    return allTags.map((tag) => ({
+        params: { tag },
+        props: { posts: all.filter((p) => p.data.tags?.includes(tag)) },
+    }));
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+
+const sorted = posts.sort(
+    (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+);
+---
+
+<BaseLayout title={`#${tag} — ninobanjaluka`}>
+    <div class="tag-page">
+        <header class="tag-page__header">
+            <span class="tag-page__label">tag</span>
+            <h1 class="tag-page__title">#{tag}</h1>
+            <p class="tag-page__count">
+                {posts.length} post{posts.length !== 1 ? "s" : ""}
+            </p>
+        </header>
+        <ul class="tag-page__list">
+            {
+                sorted.map((post) => (
+                    <li class="tag-page__item">
+                        <a
+                            href={`/${post.section}/${post.id}`}
+                            class="tag-page__link"
+                        >
+                            <span class="tag-page__post-title">
+                                {post.data.title}
+                            </span>
+                            <span class="tag-page__post-date">
+                                {new Date(post.data.date).toLocaleDateString(
+                                    "en-GB",
+                                    {
+                                        day: "numeric",
+                                        month: "long",
+                                        year: "numeric",
+                                    },
+                                )}
+                            </span>
+                        </a>
+                    </li>
+                ))
+            }
+        </ul>
+    </div>
+</BaseLayout>
+
+<style>
+    .tag-page {
+        max-width: var(--max-w-text);
+        margin: 0 auto;
+        padding: 80px 48px 120px;
+    }
+    .tag-page__header {
+        margin-bottom: 64px;
+    }
+    .tag-page__label {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-hint);
+    }
+    .tag-page__title {
+        font-size: clamp(36px, 6vw, 64px);
+        color: var(--color-accent);
+        margin: 8px 0 16px;
+        letter-spacing: -0.01em;
+    }
+    .tag-page__count {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        color: var(--color-hint);
+    }
+    .tag-page__list {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+    .tag-page__item {
+        border-top: 1px solid var(--color-border);
+    }
+    .tag-page__item:last-child {
+        border-bottom: 1px solid var(--color-border);
+    }
+    .tag-page__link {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding: 20px 0;
+        gap: 24px;
+        transition: color 0.2s;
+    }
+    .tag-page__link:hover .tag-page__post-title {
+        color: var(--color-accent);
+    }
+    .tag-page__post-title {
+        font-size: 18px;
+        color: var(--color-text);
+        transition: color 0.2s;
+    }
+    .tag-page__post-date {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        color: var(--color-hint);
+        white-space: nowrap;
+    }
+    @media (max-width: 640px) {
+        .tag-page {
+            padding: 48px 20px 80px;
+        }
+    }
+</style>

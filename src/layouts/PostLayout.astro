@@ -1,116 +1,234 @@
 ---
-import BaseLayout from './BaseLayout.astro';
+import BaseLayout from "./BaseLayout.astro";
 
 interface Props {
-  title: string;
-  date: Date;
-  excerpt: string;
-  section: 'photography' | 'code' | 'life' | 'art';
-  tags?: string[];
-  camera?: string;
-  location?: string;
-  tech?: string[];
-  repo?: string;
-  medium?: string;
-  tools?: string[];
+    title: string;
+    date: Date;
+    excerpt: string;
+    section: "photography" | "code" | "life" | "art";
+    tags?: string[];
+    camera?: string;
+    location?: string;
+    tech?: string[];
+    repo?: string;
+    medium?: string;
+    tools?: string[];
 }
 
-const { title, date, excerpt, section, tags, camera, location, tech, repo, medium, tools } = Astro.props;
+const {
+    title,
+    date,
+    excerpt,
+    section,
+    tags,
+    camera,
+    location,
+    tech,
+    repo,
+    medium,
+    tools,
+} = Astro.props;
 
-const sectionLabel = { photography: 'Photography', code: 'Code', life: 'Life', art: 'Art' };
-const sectionHref  = { photography: '/photography', code: '/code', life: '/life', art: '/art' };
+const sectionLabel = {
+    photography: "Photography",
+    code: "Code",
+    life: "Life",
+    art: "Art",
+};
+const sectionHref = {
+    photography: "/photography",
+    code: "/code",
+    life: "/life",
+    art: "/art",
+};
 
-const dateStr = date.toLocaleDateString('en-GB', {
-  day: 'numeric', month: 'long', year: 'numeric',
+const dateStr = date.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
 });
 ---
 
 <BaseLayout title={`${title} — ninobanjaluka`} description={excerpt}>
-  <article class="post">
-    <header class="post__header">
-      <div class="post__meta">
-        <a href={sectionHref[section]} class={`tag tag--${section}`}>{sectionLabel[section]}</a>
-        <span class="post__date">{dateStr}</span>
-      </div>
+    <article class="post">
+        <header class="post__header">
+            <div class="post__meta">
+                <a href={sectionHref[section]} class={`tag tag--${section}`}
+                    >{sectionLabel[section]}</a
+                >
+                <span class="post__date">{dateStr}</span>
+            </div>
 
-      <h1 class="post__title">{title}</h1>
-      <p class="post__excerpt">{excerpt}</p>
+            <h1 class="post__title">{title}</h1>
+            <p class="post__excerpt">{excerpt}</p>
 
-      {section === 'photography' && (camera || location) && (
-        <div class="post__details">
-          {camera   && <span class="post__detail"><span class="post__detail-label">Camera</span>{camera}</span>}
-          {location && <span class="post__detail"><span class="post__detail-label">Location</span>{location}</span>}
+            {
+                section === "photography" && (camera || location) && (
+                    <div class="post__details">
+                        {camera && (
+                            <span class="post__detail">
+                                <span class="post__detail-label">Camera</span>
+                                {camera}
+                            </span>
+                        )}
+                        {location && (
+                            <span class="post__detail">
+                                <span class="post__detail-label">Location</span>
+                                {location}
+                            </span>
+                        )}
+                    </div>
+                )
+            }
+
+            {
+                section === "code" && (tech || repo) && (
+                    <div class="post__details">
+                        {tech && (
+                            <span class="post__detail">
+                                <span class="post__detail-label">Stack</span>
+                                {tech.join(", ")}
+                            </span>
+                        )}
+                        {repo && (
+                            <a
+                                href={repo}
+                                target="_blank"
+                                rel="noopener"
+                                class="post__detail post__detail--link"
+                            >
+                                <span class="post__detail-label">Repo</span>
+                                {repo.replace("https://github.com/", "")}
+                            </a>
+                        )}
+                    </div>
+                )
+            }
+
+            {
+                section === "art" && (medium || tools) && (
+                    <div class="post__details">
+                        {medium && (
+                            <span class="post__detail">
+                                <span class="post__detail-label">Medium</span>
+                                {medium}
+                            </span>
+                        )}
+                        {tools && (
+                            <span class="post__detail">
+                                <span class="post__detail-label">Tools</span>
+                                {tools.join(", ")}
+                            </span>
+                        )}
+                    </div>
+                )
+            }
+        </header>
+
+        <div class="prose">
+            <slot />
         </div>
-      )}
 
-      {section === 'code' && (tech || repo) && (
-        <div class="post__details">
-          {tech && <span class="post__detail"><span class="post__detail-label">Stack</span>{tech.join(', ')}</span>}
-          {repo && <a href={repo} target="_blank" rel="noopener" class="post__detail post__detail--link">
-            <span class="post__detail-label">Repo</span>{repo.replace('https://github.com/', '')}
-          </a>}
-        </div>
-      )}
-
-      {section === 'art' && (medium || tools) && (
-        <div class="post__details">
-          {medium && <span class="post__detail"><span class="post__detail-label">Medium</span>{medium}</span>}
-          {tools  && <span class="post__detail"><span class="post__detail-label">Tools</span>{tools.join(', ')}</span>}
-        </div>
-      )}
-    </header>
-
-    <div class="prose">
-      <slot />
-    </div>
-
-    {tags && tags.length > 0 && (
-      <footer class="post__footer">
-        {tags.map(tag => <span class="post__tag">{tag}</span>)}
-      </footer>
-    )}
-  </article>
+        {
+            tags && tags.length > 0 && (
+                <footer class="post__footer">
+                    {tags.map((tag) => (
+                        <a href={`/tags/${tag}`} class="post__tag">
+                            {tag}
+                        </a>
+                    ))}
+                </footer>
+            )
+        }
+    </article>
 </BaseLayout>
 
 <style>
-  .post { max-width: var(--max-w-text); margin: 0 auto; padding: 80px 48px 120px; }
-  .post__meta { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; }
-  .post__date {
-    font-family: var(--font-mono); font-size: 11px;
-    letter-spacing: 0.1em; color: var(--color-hint);
-  }
-  .post__title {
-    font-size: clamp(36px, 6vw, 64px); color: var(--color-text);
-    margin-bottom: 24px; letter-spacing: -0.01em;
-  }
-  .post__excerpt {
-    font-size: 20px; color: var(--color-muted); line-height: 1.6;
-    margin-bottom: 32px; font-family: var(--font-body); font-style: italic;
-  }
-  .post__details {
-    display: flex; gap: 28px; flex-wrap: wrap;
-    margin-bottom: 48px; padding-top: 24px;
-    border-top: 1px solid var(--color-border);
-  }
-  .post__detail {
-    font-family: var(--font-mono); font-size: 12px;
-    letter-spacing: 0.05em; color: var(--color-muted);
-    display: flex; flex-direction: column; gap: 4px;
-  }
-  .post__detail--link { color: var(--color-accent); }
-  .post__detail-label {
-    font-size: 9px; letter-spacing: 0.15em;
-    text-transform: uppercase; color: var(--color-hint);
-  }
-  .post__footer {
-    margin-top: 64px; padding-top: 32px;
-    border-top: 1px solid var(--color-border);
-    display: flex; gap: 8px; flex-wrap: wrap;
-  }
-  .post__tag {
-    font-family: var(--font-mono); font-size: 10px;
-    letter-spacing: 0.1em; color: var(--color-hint);
-    padding: 4px 10px; border: 1px solid var(--color-border); border-radius: 2px;
-  }
-  @media (max-width: 640px) { .post { padding: 48px 20px 80px; } }
+    .post {
+        max-width: var(--max-w-text);
+        margin: 0 auto;
+        padding: 80px 48px 120px;
+    }
+    .post__meta {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 32px;
+    }
+    .post__date {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        color: var(--color-hint);
+    }
+    .post__title {
+        font-size: clamp(36px, 6vw, 64px);
+        color: var(--color-text);
+        margin-bottom: 24px;
+        letter-spacing: -0.01em;
+    }
+    .post__excerpt {
+        font-size: 20px;
+        color: var(--color-muted);
+        line-height: 1.6;
+        margin-bottom: 32px;
+        font-family: var(--font-body);
+        font-style: italic;
+    }
+    .post__details {
+        display: flex;
+        gap: 28px;
+        flex-wrap: wrap;
+        margin-bottom: 48px;
+        padding-top: 24px;
+        border-top: 1px solid var(--color-border);
+    }
+    .post__detail {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.05em;
+        color: var(--color-muted);
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    .post__detail--link {
+        color: var(--color-accent);
+    }
+    .post__detail-label {
+        font-size: 9px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-hint);
+    }
+    .post__footer {
+        margin-top: 64px;
+        padding-top: 32px;
+        border-top: 1px solid var(--color-border);
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    .post__tag {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        color: var(--color-hint);
+        padding: 4px 10px;
+        border: 1px solid var(--color-border);
+        border-radius: 2px;
+        text-decoration: none;
+        transition:
+            color 0.2s,
+            border-color 0.2s;
+    }
+    .post__tag:hover {
+        color: var(--color-accent);
+        border-color: rgba(251, 191, 36, 0.4);
+    }
+    @media (max-width: 640px) {
+        .post {
+            padding: 48px 20px 80px;
+        }
+    }
 </style>
