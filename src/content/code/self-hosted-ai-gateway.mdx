@@ -14,15 +14,15 @@ Three reasons:
 
 **Fallback routing.** If my primary provider is down or rate-limited, I want requests to automatically go to a secondary. Without a router, that logic lives in every app that was not possible, at least not at the time i ran the experiment "Two Routers-7 agents".
 
-**Local model support.** I run KoboldCpp, Llama.cpp and Ollama for inference on local GGUF models, depending on the use case. A model relay lets me route some requests there — cheaper for tasks that don't need a frontier model.
+**Local model support.** I run KoboldCpp, Llama.cpp and Ollama for inference on local GGUF models, depending on the use case. A model relay lets me route some requests there, cheaper for tasks that don't need a frontier model.
 
-**A single endpoint.** My Telegram bot, my cron jobs, my CLI tools — they all talk to `localhost`. Swapping providers means changing config in one file, not hunting through every project.
+**A single endpoint.** My Telegram bot, my cron jobs, my CLI tools,  they all talk to `localhost`. Swapping providers means changing config in one file, not hunting through every project.
 
 ## The hardware
 
 Intel MacPro, x86_64. This matters because most AI tooling in 2026 assumes Apple Silicon or a CUDA GPU. I have neither. Metal acceleration isn't available on the MacPro's architecture, and while I have an AMD Radeon on the MacBook, llama.cpp doesn't play nicely with it for inference.
 
-So everything runs on CPU. KoboldCpp is the most efficient option I've found — roughly 30% faster than Ollama on this hardware for the same GGUF models.
+So everything runs on CPU. KoboldCpp is the most efficient option I've found, roughly 30% faster than Ollama on this hardware for the same GGUF models.
 The trick in Kobolds sleeve is offloading some layers to AMD gpu. My MAC loves it, and hates Ollama so much it spins up fans in 2 minutes, tops.
 
 ## The stack
@@ -41,7 +41,7 @@ OpenClaw runs as a launchd service, Hermes is doing it on its own, so all starts
 
 This was the hardest part to get right. The QMD backend uses node-llama-cpp for embedding, which on first run tried to detect CUDA and failed noisily. The fix was setting `GGML_CUDA=0` in the launchd environment dictionary.
 
-After that, vector memory works reliably. The agent — I call it Hal — can reference things from previous conversations, which makes the daily briefing cron jobs considerably more useful.
+After that, vector memory works reliably. The agent, I call it Hal, can reference things from previous conversations, which makes the daily briefing cron jobs considerably more useful.
 
 ## Telegram integration
 
@@ -56,5 +56,5 @@ Every morning at 08:00, a cron job asks Hal for a weather and news briefing for 
 
 The launchd environment variable situation is fiddly. Every time you change a key you need to `launchctl unload` and `launchctl load` the plist. I've scripted this but it still catches me out when I'm debugging at 11pm.
 
-Otherwise — it works. Stable for months. Worth the setup time.
+Otherwise, it works. Stable for months. Worth the setup time.
 To Experiment is to Live, at least for me, and it doesn't matter is it a code, paint or a tune. YOLO.
