@@ -6,7 +6,7 @@ tech: ["Obsidian", "Mac", "http", "JavaScript"]
 tags: ["Mac", "say", "tts", "local"]
 ---
 
-I use Obsidian for everything. Notes, ideas, journal entries, research — it all lives there. And for a while, I had a great setup: a text-to-speech plugin that would read my notes back to me while I was doing other things. Then it stopped working. The plugin relied on an external TTS service that changed its API, and just like that, silence.
+I use Obsidian for almost everything i have in written form. Notes, ideas, journal entries, research, it all lives there. And for a while, I had a great setup: a text-to-speech plugin that would read my notes back to me while I was doing other things. Then it stopped working. The plugin relied on an external TTS service that changed its API, and just like that, silence.
 
 So I decided to build my own.
 
@@ -14,7 +14,7 @@ So I decided to build my own.
 
 ## The Idea
 
-Every Mac ships with a command called `say`. Open Terminal, type `say hello`, and your Mac talks to you. It supports dozens of high-quality voices — Samantha, Ava, Daniel — and it works completely offline, no API keys, no internet, no subscription. It's been sitting there all along, built into macOS.
+Every Mac ships with a command called `say`. Open Terminal, type `say hello`, and your Mac talks to you. It supports dozens of high-quality voices: Samantha, Ava, Daniel, and it works completely offline, no API keys, no internet, no subscription. It's been sitting there all along, built into macOS.
 
 The idea was simple: wrap `say` inside an Obsidian plugin. Click a button, your note gets read aloud. That's it.
 
@@ -38,7 +38,7 @@ Eventually I stepped back and asked: do I actually need TypeScript? The answer w
 
 Obsidian runs inside Electron, which is essentially a locked-down browser. When I tried to call my local TTS server using `fetch()`, Obsidian blocked it. Content Security Policy. The browser sandbox doesn't trust localhost connections made from plugins.
 
-The fix? Electron gives plugins access to Node.js core modules. Instead of `fetch()`, I used the `http` module — which bypasses the browser sandbox entirely because it runs at the system level, not the browser level. Once I made that switch, the connection worked immediately.
+The fix? Electron gives plugins access to Node.js core modules. Instead of `fetch()`, I used the `http` module, which bypasses the browser sandbox entirely because it runs at the system level, not the browser level. Once I made that switch, the connection worked immediately.
 
 ---
 
@@ -52,7 +52,7 @@ The new approach uses Node.js `child_process` to call `say` directly:
 const proc = child_process.spawn('say', ['-v', 'Samantha', '-r', '175', text]);
 ```
 
-This is cleaner, faster, and means any Mac user can install the plugin and it works immediately — no server to set up, no Python environment, nothing.
+This is cleaner, faster, and means any Mac user can install the plugin and it works immediately, no server to set up, no Python environment, nothing.
 
 ---
 
@@ -73,7 +73,7 @@ By the end, the plugin had:
 
 I spent more time than I'd like to admit trying to get "speak selected text" working from a ribbon button. The problem is fundamental: when you click a ribbon button, Obsidian moves focus away from the editor. By the time the plugin runs, the selection is gone.
 
-There are workarounds — caching the selection on every keypress, for example — but every approach I tried introduced other problems. In the end I left it out. A clean plugin that does what it says is better than a broken plugin that tries to do everything.
+There are workarounds — caching the selection on every keypress, for example, but every approach I tried introduced other problems. In the end I left it out. A clean plugin that does what it says is better than a broken plugin that tries to do everything.
 
 ---
 
@@ -95,7 +95,7 @@ Getting the format flags right for `say` took several attempts. The flag `--data
 
 The plugin is open source and available on GitHub at [katnino/obsidian-mac-tts](https://github.com/katnino/obsidian-mac-tts). 
 
-It's macOS only, which is fine — `say` is a Mac thing. If you have a Mac and you use Obsidian, you can install it manually right now. Community plugin store submission is in progress.
+It's macOS only, which is fine, `say` is a Mac thing. If you have a Mac and you use Obsidian, you can install it manually right now. Community plugin store submission is in progress.
 
 ---
 
