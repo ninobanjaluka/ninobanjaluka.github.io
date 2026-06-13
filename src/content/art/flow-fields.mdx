@@ -9,7 +9,7 @@ tags: ["generative", "flow-fields", "creative-coding"]
 
 A flow field is a grid of angles. Each point in space has a direction, and if you place a particle there, it follows that direction, then moves to the next point and follows that one, and so on until it either leaves the canvas or you get bored and stop it.
 
-The interesting part is how you define the angles. The most common method is Perlin noise — a function that produces smooth, organic-looking randomness. Unlike pure random, Perlin noise has coherence: nearby points in the noise space return similar values. This is why flow field outputs look like wind or water rather than static.
+The interesting part is how you define the angles. The most common method is Perlin noise, a function that produces smooth, organic-looking randomness. Unlike pure random, Perlin noise has coherence: nearby points in the noise space return similar values. This is why flow field outputs look like wind or water rather than static.
 
 ## The setup
 
@@ -59,13 +59,13 @@ function draw() {
 
 The output depends on the noise offset, the scale factor, the number of particles, the speed, and how you handle color. Change any one of these and you get something completely different.
 
-What I find addictive is that each configuration feels like a discovery rather than a design. I'm not drawing anything — I'm choosing rules, and the rules draw something, and sometimes it's exactly what I expected and sometimes it's genuinely surprising.
+What I find addictive is that each configuration feels like a discovery rather than a design. I'm not drawing anything, I'm choosing rules, and the rules draw something, and sometimes it's exactly what I expected and sometimes it's genuinely surprising.
 
 The amber on black is my default palette because it matches everything else I make. But I've done versions in soft blue on near-black that look like deep ocean currents, and once accidentally produced something that looked like a topographic map of a place I've never been.
 
 ## The patience problem
 
-Flow fields take time to reveal themselves. The first hundred frames look like noise. By frame five hundred, structure is emerging. By frame two thousand, you start to see the basins and attractors in the field — regions where particles tend to cluster or avoid.
+Flow fields take time to reveal themselves. The first hundred frames look like noise. By frame five hundred, structure is emerging. By frame two thousand, you start to see the basins and attractors in the field, regions where particles tend to cluster or avoid.
 
 This is not compatible with modern attention spans, including mine. I usually let them run in a separate window while doing something else and then look over occasionally.
 
