@@ -161,14 +161,14 @@ const blogPostingLd = {
                         {tech && (
                             <span class="post__detail">
                                 <span class="post__detail-label">Stack</span>
-                                {tech.join(", ")}
+                                {tech?.join(", ")}
                             </span>
                         )}
                         {repo && (
                             <a
                                 href={repo}
                                 target="_blank"
-                                rel="noopener"
+                                rel="noopener noreferrer"
                                 class="post__detail post__detail--link"
                             >
                                 <span class="post__detail-label">Repo</span>
@@ -191,7 +191,7 @@ const blogPostingLd = {
                         {tools && (
                             <span class="post__detail">
                                 <span class="post__detail-label">Tools</span>
-                                {tools.join(", ")}
+                                {tools?.join(", ")}
                             </span>
                         )}
                     </div>
