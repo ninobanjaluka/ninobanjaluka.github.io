@@ -13,6 +13,7 @@ interface Props {
     repo?: string;
     medium?: string;
     tools?: string[];
+    coverImage?: string;
 }
 
 const {
@@ -27,6 +28,7 @@ const {
     repo,
     medium,
     tools,
+    coverImage,
 } = Astro.props;
 
 const sectionLabel = {
@@ -52,6 +54,9 @@ const siteBase = "https://ninobanjaluka.github.io";
 const postUrl = new URL(Astro.url.pathname, Astro.site).href;
 const sectionUrl = new URL(sectionHref[section], Astro.site).href;
 const isoDate = date.toISOString();
+
+const postImage = coverImage || "/nino.jpg";
+const fullImageURL = new URL(postImage, Astro.site).href;
 
 const blogPostingLd = {
     "@context": "https://schema.org",
@@ -85,7 +90,14 @@ const blogPostingLd = {
             "datePublished": isoDate,
             "dateModified": isoDate,
             "author": { "@id": `${siteBase}/#person` },
-            "publisher": { "@id": `${siteBase}/#person` }
+            "publisher": { "@id": `${siteBase}/#person` },
+            "image": {
+                "@type": "ImageObject",
+                "@id": `${postUrl}#primaryimage`,
+                "url": fullImageURL,
+                "width": 1200,
+                "height": 630
+            }
         },
         {
             "@type": "BreadcrumbList",
@@ -100,7 +112,12 @@ const blogPostingLd = {
 };
 ---
 
-<BaseLayout title={`${title} — ninobanjaluka`} description={excerpt}>
+<BaseLayout 
+    title={`${title} — ninobanjaluka`} 
+    description={excerpt}
+    image={postImage}
+    type="article"
+>
     <Fragment slot="head">
         <script
             type="application/ld+json"

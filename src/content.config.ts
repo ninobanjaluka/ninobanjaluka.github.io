@@ -8,6 +8,7 @@ const baseSchema = z.object({
   excerpt: z.string(),
   tags: z.array(z.string()).optional(),
   draft: z.boolean().optional().default(false),
+  coverImage: z.string().optional(),
 });
 
 const photography = defineCollection({
