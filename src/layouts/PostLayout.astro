@@ -124,7 +124,18 @@ const blogPostingLd = {
             set:html={JSON.stringify(blogPostingLd)}
         />
     </Fragment>
-    <article class="post">
+
+    {coverImage && (
+        <div class="post__hero">
+            <img
+                src={coverImage}
+                alt={title}
+                class="post__hero-img"
+            />
+        </div>
+    )}
+
+    <article class:list={["post", { "post--has-hero": !!coverImage }]}>
         <header class="post__header">
             <div class="post__meta">
                 <a href={sectionHref[section]} class={`tag tag--${section}`}
@@ -218,10 +229,25 @@ const blogPostingLd = {
 </BaseLayout>
 
 <style>
+    .post__hero {
+        width: 100%;
+        height: 520px;
+        overflow: hidden;
+    }
+    .post__hero-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+    }
     .post {
         max-width: var(--max-w-text);
         margin: 0 auto;
         padding: 80px 48px 120px;
+    }
+    .post--has-hero {
+        padding-top: 48px;
     }
     .post__meta {
         display: flex;
@@ -301,8 +327,14 @@ const blogPostingLd = {
         border-color: rgba(251, 191, 36, 0.4);
     }
     @media (max-width: 640px) {
+        .post__hero {
+            height: 260px;
+        }
         .post {
             padding: 48px 20px 80px;
+        }
+        .post--has-hero {
+            padding-top: 32px;
         }
     }
 </style>

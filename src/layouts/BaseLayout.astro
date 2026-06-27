@@ -255,6 +255,8 @@ const fullImageURL = new URL(image, Astro.site).href;
         }
         .nav__links {
             gap: 18px;
+            min-width: 0;
+            overflow-x: auto;
         }
         .nav__rss {
             display: none;
