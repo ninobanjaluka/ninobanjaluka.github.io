@@ -110,8 +110,16 @@ const fullImageURL = new URL(image, Astro.site).href;
 
 <script>
     const nav = document.getElementById("nav");
+    let lastScrollY = 0;
+
     window.addEventListener("scroll", () => {
-        nav?.classList.toggle("nav--scrolled", window.scrollY > 60);
+        const currentScrollY = window.scrollY;
+        const isScrollingUp = currentScrollY < lastScrollY;
+        
+        const shouldShowBackground = isScrollingUp || currentScrollY < 60;
+        nav?.classList.toggle("nav--scrolled", shouldShowBackground);
+        
+        lastScrollY = currentScrollY;
     });
 </script>
 
