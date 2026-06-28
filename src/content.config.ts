@@ -16,6 +16,7 @@ const photography = defineCollection({
   schema: baseSchema.extend({
     camera: z.string().optional(),
     location: z.string().optional(),
+    coverImage: z.string().optional(),
   }),
 });
 
@@ -24,6 +25,7 @@ const code = defineCollection({
   schema: baseSchema.extend({
     tech: z.array(z.string()).optional(),
     repo: z.string().url().optional(),
+    coverImage: z.string().optional(),
   }),
 });
 
