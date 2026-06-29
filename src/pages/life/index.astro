@@ -4,7 +4,11 @@ import PostCard from "../../components/PostCard.astro";
 import { getCollection } from "astro:content";
 
 const posts = (await getCollection("life", ({ data }) => !data.draft)).sort(
-    (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+    (a, b) => {
+        if (a.data.pinned && !b.data.pinned) return -1;
+        if (!a.data.pinned && b.data.pinned) return 1;
+        return b.data.date.valueOf() - a.data.date.valueOf();
+    },
 );
 ---
 
@@ -29,6 +33,7 @@ const posts = (await getCollection("life", ({ data }) => !data.draft)).sort(
                         excerpt={post.data.excerpt}
                         href={`/life/${post.id}`}
                         section="life"
+                        pinned={post.data.pinned}
                     />
                 ))
             }

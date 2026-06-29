@@ -27,7 +27,11 @@ const allPosts = [
         href: `/life/${p.id}`,
     })),
 ]
-    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+    .sort((a, b) => {
+        if (a.data.pinned && !b.data.pinned) return -1;
+        if (!a.data.pinned && b.data.pinned) return 1;
+        return b.data.date.valueOf() - a.data.date.valueOf();
+    })
     .slice(0, 6);
 
 const homepageLd = {
@@ -116,6 +120,7 @@ const homepageLd = {
                         excerpt={post.data.excerpt}
                         href={post.href}
                         section={post.section}
+                        pinned={post.data.pinned}
                     />
                 ))
             }

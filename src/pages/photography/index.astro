@@ -5,7 +5,11 @@ import { getCollection } from "astro:content";
 
 const posts = (
     await getCollection("photography", ({ data }) => !data.draft)
-).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+).sort((a, b) => {
+    if (a.data.pinned && !b.data.pinned) return -1;
+    if (!a.data.pinned && b.data.pinned) return 1;
+    return b.data.date.valueOf() - a.data.date.valueOf();
+});
 ---
 
 <BaseLayout
@@ -30,6 +34,7 @@ const posts = (
                         meta={[post.data.camera, post.data.location]
                             .filter(Boolean)
                             .join(" · ")}
+                        pinned={post.data.pinned}
                     />
                 ))
             }
