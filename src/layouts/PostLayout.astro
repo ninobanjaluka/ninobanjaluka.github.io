@@ -58,58 +58,49 @@ const isoDate = date.toISOString();
 const postImage = coverImage || "/nino.jpg";
 const fullImageURL = new URL(postImage, Astro.site).href;
 
-const blogPostingLd = {
-    "@context": "https://schema.org",
-    "@graph": [
-        {
-            "@type": "WebSite",
-            "@id": `${siteBase}/#website`,
-            "url": `${siteBase}/`,
-            "name": "Nino Katić"
-        },
-        {
-            "@type": "WebPage",
-            "@id": `${postUrl}#webpage`,
-            "url": postUrl,
-            "isPartOf": { "@id": `${siteBase}/#website` },
-            "name": title,
-            "inLanguage": "en",
-            "breadcrumb": { "@id": `${postUrl}#breadcrumb` }
-        },
-        {
-            "@type": "BlogPosting",
-            "@id": `${postUrl}#blogposting`,
-            "url": postUrl,
-            "mainEntityOfPage": { "@id": `${postUrl}#webpage` },
-            "isPartOf": { "@id": `${siteBase}/#website` },
-            "headline": title,
-            "description": excerpt,
-            "articleSection": sectionLabel[section],
-            "keywords": tags?.join(", "),
-            "inLanguage": "en",
-            "datePublished": isoDate,
-            "dateModified": isoDate,
-            "author": { "@id": `${siteBase}/#person` },
-            "publisher": { "@id": `${siteBase}/#person` },
-            "image": {
-                "@type": "ImageObject",
-                "@id": `${postUrl}#primaryimage`,
-                "url": fullImageURL,
-                "width": 1200,
-                "height": 630
-            }
-        },
-        {
-            "@type": "BreadcrumbList",
-            "@id": `${postUrl}#breadcrumb`,
-            "itemListElement": [
-                { "@type": "ListItem", "position": 1, "name": "Home", "item": `${siteBase}/` },
-                { "@type": "ListItem", "position": 2, "name": sectionLabel[section], "item": sectionUrl },
-                { "@type": "ListItem", "position": 3, "name": title, "item": postUrl }
-            ]
+const blogPostingLd = [
+    {
+        "@type": "WebPage",
+        "@id": `${postUrl}#webpage`,
+        "url": postUrl,
+        "isPartOf": { "@id": `${siteBase}/#website` },
+        "name": title,
+        "inLanguage": "en",
+        "breadcrumb": { "@id": `${postUrl}#breadcrumb` }
+    },
+    {
+        "@type": "BlogPosting",
+        "@id": `${postUrl}#blogposting`,
+        "url": postUrl,
+        "mainEntityOfPage": { "@id": `${postUrl}#webpage` },
+        "isPartOf": { "@id": `${siteBase}/#website` },
+        "headline": title,
+        "description": excerpt,
+        "articleSection": sectionLabel[section],
+        "keywords": tags?.join(", "),
+        "inLanguage": "en",
+        "datePublished": isoDate,
+        "dateModified": isoDate,
+        "author": { "@id": `${siteBase}/#person` },
+        "publisher": { "@id": `${siteBase}/#person` },
+        "image": {
+            "@type": "ImageObject",
+            "@id": `${postUrl}#primaryimage`,
+            "url": fullImageURL,
+            "width": 1200,
+            "height": 630
         }
-    ]
-};
+    },
+    {
+        "@type": "BreadcrumbList",
+        "@id": `${postUrl}#breadcrumb`,
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": `${siteBase}/` },
+            { "@type": "ListItem", "position": 2, "name": sectionLabel[section], "item": sectionUrl },
+            { "@type": "ListItem", "position": 3, "name": title, "item": postUrl }
+        ]
+    }
+];
 ---
 
 <BaseLayout 
@@ -117,13 +108,8 @@ const blogPostingLd = {
     description={excerpt}
     image={postImage}
     type="article"
+    jsonLd={blogPostingLd}
 >
-    <Fragment slot="head">
-        <script
-            type="application/ld+json"
-            set:html={JSON.stringify(blogPostingLd)}
-        />
-    </Fragment>
 
     {coverImage && (
         <div class="post__hero">

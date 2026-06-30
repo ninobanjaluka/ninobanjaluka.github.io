@@ -34,45 +34,20 @@ const allPosts = [
     })
     .slice(0, 6);
 
-const homepageLd = {
-    "@context": "https://schema.org",
-    "@graph": [
-        {
-            "@type": "WebSite",
-            "@id": "https://ninobanjaluka.github.io/#website",
-            url: "https://ninobanjaluka.github.io/",
-            name: "Nino Katić",
-            description:
-                "Personal site of Nino Katić — photography, code, art, and life.",
-            inLanguage: "en",
-            publisher: { "@id": "https://ninobanjaluka.github.io/#person" },
-            image: {
-                "@type": "ImageObject",
-                "@id": "https://ninobanjaluka.github.io/#website-image",
-                url: "https://ninobanjaluka.github.io/nino.jpg",
-                caption: "Nino Katić",
-            },
-        },
-        {
-            "@type": "ProfilePage",
-            "@id": "https://ninobanjaluka.github.io/#webpage",
-            url: "https://ninobanjaluka.github.io/",
-            isPartOf: { "@id": "https://ninobanjaluka.github.io/#website" },
-            name: "Nino Katić",
-            inLanguage: "en",
-            mainEntity: { "@id": "https://ninobanjaluka.github.io/#person" },
-        },
-    ],
-};
+const homepageLd = [
+    {
+        "@type": "ProfilePage",
+        "@id": "https://ninobanjaluka.github.io/#webpage",
+        url: "https://ninobanjaluka.github.io/",
+        isPartOf: { "@id": "https://ninobanjaluka.github.io/#website" },
+        name: "Nino Kati\u0107",
+        inLanguage: "en",
+        mainEntity: { "@id": "https://ninobanjaluka.github.io/#person" },
+    },
+];
 ---
 
-<BaseLayout>
-    <Fragment slot="head">
-        <script
-            type="application/ld+json"
-            set:html={JSON.stringify(homepageLd)}
-        />
-    </Fragment>
+<BaseLayout jsonLd={homepageLd}>
     <section class="hero">
         <div class="hero__bg"></div>
         <div class="hero__content">

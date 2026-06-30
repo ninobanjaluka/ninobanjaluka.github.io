@@ -1,12 +1,13 @@
 ---
 import "../styles/global.css";
-import JsonLdBase from "../components/JsonLdBase.astro";
+import StructuredData from "../components/StructuredData.astro";
 
 interface Props {
     title?: string;
     description?: string;
     image?: string;
     type?: string;
+    jsonLd?: Record<string, unknown>[];
 }
 
 const {
@@ -14,6 +15,7 @@ const {
     description = "Photography, coding adventures, art and life in Banja Luka.",
     image = "/nino.jpg",
     type = "website",
+    jsonLd = [],
 } = Astro.props;
 
 const nav = [
@@ -26,6 +28,52 @@ const nav = [
 const currentPath = Astro.url.pathname;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site).href;
 const fullImageURL = new URL(image, Astro.site).href;
+const siteHref = Astro.site.href.replace(/\/$/, "");
+
+const baseGraph = [
+  {
+    "@type": "WebSite",
+    "@id": `${siteHref}/#website`,
+    url: siteHref + "/",
+    name: "Nino Kati\u0107",
+    description:
+      "Personal site of Nino Kati\u0107 \u2014 photography, code, art, and life.",
+    inLanguage: "en",
+    publisher: { "@id": `${siteHref}/#person` },
+    image: {
+      "@type": "ImageObject",
+      "@id": `${siteHref}/#website-image`,
+      url: fullImageURL,
+      width: 3018,
+      height: 2656,
+      caption: "Nino Kati\u0107",
+    },
+  },
+  {
+    "@type": "Person",
+    "@id": `${siteHref}/#person`,
+    url: siteHref + "/",
+    name: "Nino Kati\u0107",
+    givenName: "Nino",
+    familyName: "Kati\u0107",
+    description:
+      "Artist and engineer from Banja Luka \u2014 photography, code, art, and life.",
+    image: {
+      "@type": "ImageObject",
+      "@id": `${siteHref}/#person-image`,
+      url: fullImageURL,
+      width: 3018,
+      height: 2656,
+      caption: "Nino Kati\u0107",
+    },
+    sameAs: [
+      "https://github.com/ninobanjaluka",
+      "https://github.com/katnino",
+    ],
+  },
+];
+
+const fullGraph = [...baseGraph, ...jsonLd];
 ---
 
 <!doctype html>
@@ -55,7 +103,7 @@ const fullImageURL = new URL(image, Astro.site).href;
         <meta name="twitter:image" content={fullImageURL} />
         
         <title>{title}</title>
-        <JsonLdBase />
+        <StructuredData graph={fullGraph} />
         <slot name="head" />
     </head>
     <body>
