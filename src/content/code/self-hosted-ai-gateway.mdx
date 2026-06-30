@@ -23,7 +23,7 @@ Three reasons:
 Intel MacPro, x86_64. This matters because most AI tooling in 2026 assumes Apple Silicon or a CUDA GPU. I have neither. Metal acceleration isn't available on the MacPro's architecture, and while I have an AMD Radeon on the MacBook, llama.cpp doesn't play nicely with it for inference.
 
 So everything runs on CPU. KoboldCpp is the most efficient option I've found, roughly 30% faster than Ollama on this hardware for the same GGUF models.
-The trick in Kobolds sleeve is offloading some layers to AMD gpu. My MAC loves it, and hates Ollama so much it spins up fans in 2 minutes, tops.
+The trick in Kobold's sleeve is offloading some layers to AMD GPU. My Mac loves it, and hates Ollama so much it spins up fans in 2 minutes, tops.
 
 ## The stack
 
