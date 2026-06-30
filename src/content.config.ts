@@ -32,7 +32,10 @@ const code = defineCollection({
 
 const life = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/life' }),
-  schema: baseSchema,
+  schema: baseSchema.extend({
+    camera: z.string().optional(),
+    location: z.string().optional(),
+  }),
 });
 
 const art = defineCollection({

@@ -134,7 +134,7 @@ const blogPostingLd = [
             <p class="post__excerpt">{excerpt}</p>
 
             {
-                section === "photography" && (camera || location) && (
+                (section === "photography" || section === "life") && (camera || location) && (
                     <div class="post__details">
                         {camera && (
                             <span class="post__detail">
