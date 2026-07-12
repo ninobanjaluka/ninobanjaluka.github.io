@@ -1,0 +1,32 @@
+---
+title: "Drveće Banjaluke: mapping the trees on Bulevar Živojina Mišića"
+date: 2026-07-12
+excerpt: "A tree map for Banjaluka: Leaflet frontend, Supabase/PostGIS backend, and 3D scans of individual trees via model-viewer."
+section: "code"
+tags: ["gis", "supabase", "postgis", "leaflet", "sideproject"]
+repo: "https://github.com/katnino/BanjalukaTrees"
+---
+
+I've been mapping the trees along Bulevar Živojina Mišića. It's [live](https://banjalukatrees.pages.dev/), running against real Supabase data, admin login, adding/editing trees, and 3D scan uploads all work.
+
+## What it does
+
+A map of the boulevard where each tree is a point you can click to see species, measurements, condition, and if it's been scanned: a 3D model you can rotate in the browser.
+
+## Stack
+
+- **Frontend**: one `index.html` file, deployed on Cloudflare Pages. Leaflet for the map, `<model-viewer>` for the 3D scans, no build step.
+- **Backend**: Postgres/PostGIS via Supabase. `schema.sql` defines the tables — `tree` (with a PostGIS `geography(Point, 4326)` column), `species`, `zone`, `tree_photo`, `tree_scan`, `contributor` — plus row-level security so anyone can read, but only signed-in contributors can add or edit their own entries.
+- **Storage**: two public-read Supabase buckets, one for tree photos, one for `.glb` 3D scan files.
+
+## Why a separate `tree_scan` table
+
+A tree can get rescanned over time, growth, seasons, better equipment, and I wanted that history instead of overwriting the model each time. Same logic for `tree_photo`: many photos per tree, not one.
+
+## Where it's at
+
+24 trees logged so far, with measurements, condition, and scans going in as I go. The pipeline works end to end: add a tree, log its measurements and condition, attach photos, upload a 3D scan. Next step is just continuing down the boulevard, tree by tree.
+
+If it goes well, the plan is to eventually push the data into OpenStreetMap too.
+
+[Repo](https://github.com/katnino/BanjalukaTrees) · [Live](https://banjalukatrees.pages.dev/)
