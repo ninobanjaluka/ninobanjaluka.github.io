@@ -7,11 +7,18 @@ tags: ["gis", "supabase", "postgis", "leaflet", "sideproject"]
 repo: "https://github.com/katnino/BanjalukaTrees"
 ---
 
+import { Image } from 'astro:assets';
+import photo1 from '../../assets/blog/drvecescreenshot.jpg';
+import photo2 from '../../assets/blog/drvecescreenshot2.jpg'
+
+
 I've been mapping the trees along Bulevar Živojina Mišića. It's [live](https://banjalukatrees.pages.dev/), running against real Supabase data, admin login, adding/editing trees, and 3D scan uploads all work.
 
 ## What it does
 
 A map of the boulevard where each tree is a point you can click to see species, measurements, condition, and if it's been scanned: a 3D model you can rotate in the browser.
+
+<Image src={photo1} alt="screenshot" />
 
 ## Stack
 
@@ -22,6 +29,8 @@ A map of the boulevard where each tree is a point you can click to see species, 
 ## Why a separate `tree_scan` table
 
 A tree can get rescanned over time, growth, seasons, better equipment, and I wanted that history instead of overwriting the model each time. Same logic for `tree_photo`: many photos per tree, not one.
+
+<Image src={photo2} alt="screenshot2" />
 
 ## Where it's at
 
