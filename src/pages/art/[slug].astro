@@ -22,7 +22,9 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 
 const srKey = Object.keys(srModules).find((k) => k.endsWith(`/${post.id}.sr.mdx`));
-const SrContent = srKey ? srModules[srKey].default : undefined;
+const srData = srKey ? srModules[srKey] : undefined;
+const SrContent = srData?.default;
+const srExcerpt = srData?.frontmatter?.excerpt;
 ---
 
 <PostLayout
@@ -35,6 +37,7 @@ const SrContent = srKey ? srModules[srKey].default : undefined;
     tools={post.data.tools}
     coverImage={post.data.coverImage}
     SrContent={SrContent}
+    srExcerpt={srExcerpt}
 >
     <Content />
 </PostLayout>
