@@ -1,9 +1,9 @@
 # ninobanjaluka  Portfolio & Blog
 
-[![Astro](https://img.shields.io/badge/Astro-6.0-FF5D01?logo=astro)](https://astro.build)
+[![Astro](https://img.shields.io/badge/Astro-7.0-FF5D01?logo=astro)](https://astro.build)
 [![License](https://img.shields.io/github/license/noniboy/noni-portfolio)](LICENSE)
 
-A personal portfolio and blog built with **Astro 6**. It showcases four curated content sections:
+A personal portfolio and blog built with **Astro 7**. It showcases four curated content sections:
 
 -  **Photography**  
 -  **Code**  
