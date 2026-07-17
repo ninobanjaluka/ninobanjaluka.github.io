@@ -232,7 +232,7 @@ const blogPostingLd = [
         const toggle = document.querySelector<HTMLButtonElement>('[data-toggle-lang]');
         if (!toggle) return;
 
-        const enContent = document.querySelector<HTMLElement>('[data-lang="en"]');
+        const enContent = document.querySelector<HTMLElement>('.prose[data-lang="en"]');
         const srContent = document.querySelector<HTMLElement>('.prose[data-lang="sr"]');
         if (!srContent) return;
 
