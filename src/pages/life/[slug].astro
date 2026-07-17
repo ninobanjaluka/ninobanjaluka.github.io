@@ -2,16 +2,27 @@
 import { getCollection, render } from "astro:content";
 import PostLayout from "../../layouts/PostLayout.astro";
 
+const srModules = import.meta.glob("../../content/life/*.sr.mdx", { eager: true });
+
 export async function getStaticPaths() {
     const posts = await getCollection("life", ({ data }) => !data.draft);
-    return posts.map((post) => ({
-        params: { slug: post.id },
-        props: { post },
-    }));
+    const ids = new Set(posts.map((p) => p.id));
+    return posts
+        .filter((post) => {
+            const base = post.id.replace(/\.?sr$/, "");
+            return base === post.id || !ids.has(base);
+        })
+        .map((post) => ({
+            params: { slug: post.id },
+            props: { post },
+        }));
 }
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+
+const srKey = Object.keys(srModules).find((k) => k.endsWith(`/${post.id}.sr.mdx`));
+const SrContent = srKey ? srModules[srKey].default : undefined;
 ---
 
 <PostLayout
@@ -23,6 +34,7 @@ const { Content } = await render(post);
     camera={post.data.camera}
     location={post.data.location}
     coverImage={post.data.coverImage}
+    SrContent={SrContent}
 >
     <Content />
 </PostLayout>

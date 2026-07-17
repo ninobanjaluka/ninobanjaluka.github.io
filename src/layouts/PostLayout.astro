@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
+import LanguageToggle from "../components/LanguageToggle.astro";
 
 interface Props {
     title: string;
@@ -14,6 +15,7 @@ interface Props {
     medium?: string;
     tools?: string[];
     coverImage?: string;
+    SrContent?: any;
 }
 
 const {
@@ -29,7 +31,12 @@ const {
     medium,
     tools,
     coverImage,
+    SrContent,
 } = Astro.props;
+
+const hasSr = !!SrContent;
+
+
 
 const sectionLabel = {
     photography: "Photography",
@@ -128,6 +135,7 @@ const blogPostingLd = [
                     >{sectionLabel[section]}</a
                 >
                 <span class="post__date">{dateStr}</span>
+                <LanguageToggle hasTranslation={hasSr} />
             </div>
 
             <h1 class="post__title">{title}</h1>
@@ -196,9 +204,14 @@ const blogPostingLd = [
             }
         </header>
 
-        <div class="prose">
+        <div class="prose" data-lang="en">
             <slot />
         </div>
+        {hasSr && (
+            <div class="prose" data-lang="sr" style="display:none">
+                <SrContent />
+            </div>
+        )}
 
         {
             tags && tags.length > 0 && (
@@ -213,6 +226,39 @@ const blogPostingLd = [
         }
     </article>
 </BaseLayout>
+
+<script>
+    function initLangToggle() {
+        const toggle = document.querySelector<HTMLButtonElement>('[data-toggle-lang]');
+        if (!toggle) return;
+
+        const enContent = document.querySelector<HTMLElement>('[data-lang="en"]');
+        const srContent = document.querySelector<HTMLElement>('.prose[data-lang="sr"]');
+        if (!srContent) return;
+
+        const enLabel = toggle.querySelector<HTMLElement>('[data-lang="en"]');
+        const srLabel = toggle.querySelector<HTMLElement>('[data-lang="sr"]');
+
+        const saved = localStorage.getItem('post-lang');
+        if (saved === 'sr') {
+            enContent!.style.display = 'none';
+            srContent.style.display = '';
+            if (enLabel) enLabel.style.display = 'none';
+            if (srLabel) srLabel.style.display = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            const showingEn = enContent!.style.display !== 'none';
+            enContent!.style.display = showingEn ? 'none' : '';
+            srContent.style.display = showingEn ? '' : 'none';
+            if (enLabel) enLabel.style.display = showingEn ? 'none' : '';
+            if (srLabel) srLabel.style.display = showingEn ? '' : 'none';
+            localStorage.setItem('post-lang', showingEn ? 'sr' : 'en');
+        });
+    }
+    initLangToggle();
+    document.addEventListener('astro:page-load', initLangToggle);
+</script>
 
 <style>
     .post__hero {

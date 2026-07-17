@@ -1,0 +1,14 @@
+---
+interface Props {
+  hasTranslation: boolean;
+}
+
+const { hasTranslation } = Astro.props;
+---
+
+{hasTranslation && (
+  <button class="lang-toggle" data-toggle-lang type="button">
+    <span data-lang="en">SR</span>
+    <span data-lang="sr" style="display:none">EN</span>
+  </button>
+)}
