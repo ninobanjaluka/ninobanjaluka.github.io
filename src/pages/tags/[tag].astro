@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { filterSrCompanions } from "../../utils/posts";
 
 export async function getStaticPaths() {
     const [photography, code, life, art] = await Promise.all([
@@ -11,10 +12,10 @@ export async function getStaticPaths() {
     ]);
 
     const all = [
-        ...photography.map((p) => ({ ...p, section: "photography" as const })),
-        ...code.map((p) => ({ ...p, section: "code" as const })),
-        ...life.map((p) => ({ ...p, section: "life" as const })),
-        ...art.map((p) => ({ ...p, section: "art" as const })),
+        ...filterSrCompanions(photography).map((p) => ({ ...p, section: "photography" as const })),
+        ...filterSrCompanions(code).map((p) => ({ ...p, section: "code" as const })),
+        ...filterSrCompanions(life).map((p) => ({ ...p, section: "life" as const })),
+        ...filterSrCompanions(art).map((p) => ({ ...p, section: "art" as const })),
     ].filter((p) => !p.data.draft);
 
     const allTags = [...new Set(all.flatMap((p) => p.data.tags ?? []))];

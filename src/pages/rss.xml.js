@@ -1,14 +1,15 @@
 import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
+import { filterSrCompanions } from "../utils/posts";
 
 export async function GET(context) {
-  const photography = (await getCollection('photography', ({ data }) => !data.draft))
+  const photography = filterSrCompanions(await getCollection('photography', ({ data }) => !data.draft))
     .map(p => ({ ...p, href: `/photography/${p.id}` }));
-  const code = (await getCollection('code', ({ data }) => !data.draft))
+  const code = filterSrCompanions(await getCollection('code', ({ data }) => !data.draft))
     .map(p => ({ ...p, href: `/code/${p.id}` }));
-  const art = (await getCollection('art', ({ data }) => !data.draft))
+  const art = filterSrCompanions(await getCollection('art', ({ data }) => !data.draft))
     .map(p => ({ ...p, href: `/art/${p.id}` }));
-  const life = (await getCollection('life', ({ data }) => !data.draft))
+  const life = filterSrCompanions(await getCollection('life', ({ data }) => !data.draft))
     .map(p => ({ ...p, href: `/life/${p.id}` }));
 
   const allPosts = [...photography, ...code, ...art, ...life].sort(
