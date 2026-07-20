@@ -78,11 +78,7 @@ body::after {
 }
 
 .section-label::before {
-  content: '';
-  display: inline-block;
-  width: 32px;
-  height: 1px;
-  background: var(--color-accent);
+  content: none;
 }
 
 .tag {
