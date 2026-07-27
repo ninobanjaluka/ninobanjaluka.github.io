@@ -1,0 +1,41 @@
+---
+title: "Drveće Banjaluke: mapiranje stabala na Bulevaru Živojina Mišića"
+date: 2026-07-12
+excerpt: "Mapa drveća za Banjaluku: Leaflet interfejs, Supabase/PostGIS pozadina i 3D skenovi pojedinačnih stabala putem model-viewer-a."
+section: "kod"
+tags: ["gis", "supabase", "postgis", "leaflet", "sideproject"]
+repo: "https://github.com/katnino/BanjalukaTrees"
+---
+
+import { Image } from 'astro:assets';
+import photo1 from '../../assets/blog/drvecescreenshot.jpg';
+import photo2 from '../../assets/blog/drvecescreenshot2.jpg'
+
+
+Mapirao sam drveće duž Bulevara Živojina Mišića. Stranica je [aktivna](https://banjalukatrees.pages.dev/), radi sa stvarnim podacima iz Supabase-a, prijava za administratore, dodavanje/uređivanje stabala i otpremanje 3D skenova – sve to funkcioniše.
+
+## Šta aplikacija radi
+
+Mapa bulevara na kojoj je svako stablo tačka na koju možete kliknuti da biste videli vrstu, mere, stanje i da li je skenirano: 3D model koji možete rotirati u pregledaču.
+
+<Image src={photo1} alt="snimak ekrana" />
+
+## Tehnologije
+
+- **Interfejs (Frontend)**: jedan `index.html` fajl, postavljen na Cloudflare Pages. Leaflet za mapu, `<model-viewer>` za 3D skenove, bez procesa kompajliranja (build step).
+- **Pozadina (Backend)**: Postgres/PostGIS preko Supabase-a. `schema.sql` definiše tabele — `tree` (sa PostGIS `geography(Point, 4326)` kolonom), `species`, `zone`, `tree_photo`, `tree_scan`, `contributor` — plus bezbednost na nivou redova (RLS) tako da svako može čitati, ali samo prijavljeni saradnici mogu dodavati ili uređivati svoje unose.
+- **Skladište (Storage)**: dva javno čitljiva Supabase baketa (buckets), jedan za fotografije stabala, jedan za `.glb` fajlove 3D skenova.
+
+## Zašto posebna tabela `tree_scan`
+
+Stablo se može ponovo skenirati tokom vremena, rasta, godišnjih doba, sa boljom opremom, i želeo sam tu istoriju umesto da svaki put prepisujem model. Ista logika važi i za `tree_photo`: mnogo fotografija po stablu, a ne samo jedna.
+
+<Image src={photo2} alt="snimak ekrana 2" />
+
+## Trenutno stanje
+
+Do sada je evidentirano 24 stabla, sa merama, stanjem i skenovima koji se unose kako napredujem. Ceo sistem funkcioniše od početka do kraja: dodajte stablo, zabeležite njegove mere i stanje, priložite fotografije, otpremite 3D sken. Sledeći korak je samo nastavak niz bulevar, stablo po stablo.
+
+Ako sve bude dobro, plan je da se podaci na kraju prebace i u OpenStreetMap.
+
+[Repozitorijum](https://github.com/katnino/BanjalukaTrees) · [Uživo](https://banjalukatrees.pages.dev/)
