@@ -1,7 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PostCard from "../components/PostCard.astro";
-import LanguageToggle from "../components/LanguageToggle.astro";
 import { getCollection } from "astro:content";
 import { filterSrCompanions } from "../utils/posts";
 
@@ -53,11 +52,8 @@ const homepageLd = [
     <section class="hero">
         <div class="hero__bg"></div>
         <div class="hero__content">
-            <div class="hero__label-row">
-                <div class="section-label">Banja Luka, RS/Bih</div>
-                <LanguageToggle hasTranslation={true} />
-            </div>
-            <h1 class="hero__title" data-lang="en">
+            <div class="section-label">Banja Luka, RS/Bih</div>
+            <h1 class="hero__title">
                 Photographs,<br />
                 <span
                     style="font-family: 'IBM Plex Mono', var(--font-mono); color: var(--color-code); font-style: normal; font-size: 0.8em; font-weight: 400;"
@@ -65,21 +61,10 @@ const homepageLd = [
                 >
                 &amp; <em>Art</em>.<br />
             </h1>
-            <h1 class="hero__title" data-lang="sr" style="display:none">
-                Fotografija,<br />
-                <span
-                    style="font-family: 'IBM Plex Mono', var(--font-mono); color: var(--color-code); font-style: normal; font-size: 0.8em; font-weight: 400;"
-                    >kod</span
-                >
-                &amp; <em>umjetnost</em>.<br />
-            </h1>
-            <p class="hero__sub" data-lang="en">
+            <p class="hero__sub">
                 I'm Nino from Banja Luka, and I do not know what boredom is. I
                 love to steal moments from time, occasionally make art and I put snippets of
                 my life into blog posts since 2011. Enjoy the ride
-            </p>
-            <p class="hero__sub" data-lang="sr" style="display:none">
-                Ja sam Nino iz Banjaluke i ja ne poznajem dosadu. Volim da kradem momente od zaborava, ponekad se bavim umjetnošću i stavljam to sve u blog još od 2011. Uživajte.
             </p>
             <div class="hero__actions">
                 <a href="/photography" class="btn btn--primary">See my work</a>
@@ -119,38 +104,6 @@ const homepageLd = [
     </section>
 </BaseLayout>
 
-<script>
-    function initHeroLangToggle() {
-        const toggle = document.querySelector<HTMLButtonElement>('[data-toggle-lang]');
-        if (!toggle) return;
-
-        const enBlocks = document.querySelectorAll<HTMLElement>('[data-lang="en"]');
-        const srBlocks = document.querySelectorAll<HTMLElement>('[data-lang="sr"]:not([data-toggle-lang] [data-lang="sr"])');
-        if (srBlocks.length === 0) return;
-
-        const enLabel = toggle.querySelector<HTMLElement>('[data-lang="en"]');
-        const srLabel = toggle.querySelector<HTMLElement>('[data-lang="sr"]');
-
-        const saved = localStorage.getItem('post-lang');
-        if (saved === 'sr') {
-            enBlocks.forEach((el) => (el.style.display = 'none'));
-            srBlocks.forEach((el) => (el.style.display = ''));
-            if (enLabel) enLabel.style.display = 'none';
-            if (srLabel) srLabel.style.display = '';
-        }
-
-        toggle.addEventListener('click', () => {
-            const showingEn = enBlocks[0]?.style.display !== 'none';
-            enBlocks.forEach((el) => (el.style.display = showingEn ? 'none' : ''));
-            srBlocks.forEach((el) => (el.style.display = showingEn ? '' : 'none'));
-            if (enLabel) enLabel.style.display = showingEn ? 'none' : '';
-            if (srLabel) srLabel.style.display = showingEn ? '' : 'none';
-            localStorage.setItem('post-lang', showingEn ? 'sr' : 'en');
-        });
-    }
-    initHeroLangToggle();
-</script>
-
 <style>
     .hero {
         min-height: 100vh;
@@ -176,16 +129,6 @@ const homepageLd = [
     .hero__content {
         position: relative;
         max-width: 620px;
-    }
-    .hero__label-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        flex-wrap: wrap;
-    }
-    .hero__label-row .section-label {
-        margin-bottom: 0;
     }
     .hero__title {
         font-size: clamp(52px, 7vw, 88px);
