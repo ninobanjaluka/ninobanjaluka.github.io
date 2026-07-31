@@ -1,0 +1,26 @@
+---
+title: "Struja: slikajte svoje brojilo i izračunajte račun za struju"
+date: 2026-07-12
+excerpt: "Next.js aplikacija koja očitava vaše analogno brojilo za električnu energiju sa fotografije, prati očitavanja kroz vrijeme i obračunava račun prema tarifnom sistemu REERS-a u Republici Srpskoj."
+section: "kod"
+tags: ["nextjs", "supabase", "ai", "utility"]
+repo: "https://github.com/katnino/struja"
+---
+
+Obračun električne energije u Republici Srpskoj funkcioniše po REERS-ovom blok tarifnom sistemu: što više trošite, to je veća cijena po kilovat-satu. Jednostavno rečeno. Želio sam da automatizujem proces utvrđivanja tačnog tarifnog razreda na osnovu fotografije obrtnog brojčanika i vidim da li se od te ideje može razviti SaaS rješenje.
+
+## Šta aplikacija radi
+
+Dodate brojilo, a zatim svakog mjeseca ili slikate očitano stanje ili ga unesete ručno. Za analogna brojila, AI vision sloj očitava brojčanik umjesto vas: svaki korisnik donosi svoj besplatni Gemini ključ, tako da u aplikaciju nisu ugrađeni nikakvi zajednički troškovi API-ja. Nakon toga, Struja izračunava potrošnju od posljednjeg očitavanja i generiše račun prema važećim tarifama REERS-a, uz istoriju koju možete pregledati po brojilu.
+
+Ručni unos je tu kao rezervna opcija, ali čekajte, ima još toga!
+Možete vršiti očitavanja svakodnevno ili sedmično i imati stvarne uvide u vašu potrošnju energije, uz samo jednu fotografiju kada prođete pored brojila.
+Korisnik može napraviti nekoliko varijacija istog brojila, sa različitim periodima očitavanja i proračunima, te pratiti potrošnju na različite načine.
+
+## Tehnologija
+
+Next.js 16 na App Router-u, sa Server Actions koji obrađuju logiku autentifikacije, brojila i očitavanja. Supabase se brine za autentifikaciju, Postgres i bezbjednost na nivou redova, tako da podaci svakog korisnika ostaju vidljivi samo njemu. Tailwind v4 za prilagođenu tamnu temu. Vizuelni sloj je nezavisan od provajdera, sa Google Gemini-jem kao podrazumevanim.
+
+## Trenutno stanje
+
+Još je rano: ali očitavanja se pravilno izračunavaju, na mjesečnoj bazi i u dnevnim mjerenjima, a formula za to je bila moja najveća prepreka koju sam ovdje riješio. Nakon dugog razmišljanja o privatnosti, odlučio sam da se fotografije ne čuvaju nakon obrade, tako da je to urađeno namjerno i, za sada, neću primoravati korisnike da verifikuju svoju e-poštu. Sljedeći korak je usavršavanje AI ekstrakcije sa drugim modelima brojila i zaokruživanje logike proračuna za očitavanja. Slanje mjesečnog e-maila Elektroprivredi RS sa izvučenim očitavanjem za taj mjesec je takođe na planu. Vidjećemo...
