@@ -468,11 +468,19 @@ const blogPostingLd = [
     }
     @media (max-width: 640px) {
         .lightbox {
-            padding: 16px;
+            padding: 0;
+            height: 100dvh;
+        }
+        .lightbox__img {
+            max-width: 100vw;
+            max-height: 100dvh;
+            border-radius: 0;
         }
         .lightbox__close {
-            top: 12px;
-            right: 12px;
+            top: env(safe-area-inset-top, 12px);
+            right: env(safe-area-inset-right, 12px);
+            background: rgba(8, 8, 8, 0.6);
+            border-color: rgba(255, 255, 255, 0.15);
         }
     }
 </style>
