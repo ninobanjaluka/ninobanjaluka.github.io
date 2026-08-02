@@ -1,0 +1,109 @@
+---
+title: "Izrada lokalnog TTS plug in-a za Obsidian na Macu"
+date: 2026-05-30
+excerpt: "Kako sam napravio lokalni TTS dodatak za Obsidian na Macu (i zašto je to bilo teže nego što je trebalo)"
+tech: ["Obsidian", "Mac", "http", "JavaScript"]
+tags: ["Mac", "say", "tts", "local"]
+---
+
+Koristim Obsidian za skoro sve što imam u pisanoj formi. Beleške, ideje, unosi u dnevnik, istraživanje, sve to živi tamo. I neko vrijeme sam imao odlično podešavanje: dodatak za pretvaranje teksta u govor (text-to-speech) koji bi mi čitao moje beleške nazad dok sam radio druge stvari. Onda je prestao da radi. Dodatak se oslanjao na eksterni TTS servis koji je promenio svoj API, i tek tako, nastala je tišina.
+
+Tako da sam odlučio da napravim svoj.
+
+---
+
+## Ideja
+
+Svaki Mac dolazi sa komandom koja se zove `say`. Otvorite Terminal, ukucajte `say hello`, i vaš Mac vam govori. Podržava desetine visokokvalitetnih glasova: Samantha, Ava, Daniel, i radi potpuno oflajn, bez API ključeva, bez interneta, bez pretplate. Tu je sve vreme, ugrađeno u macOS.
+
+Ideja je bila jednostavna: upakovati `say` unutar Obsidian dodatka. Kliknete na dugme, vaša beleška se čita naglas. To je to.
+
+Jednostavne ideje imaju običaj da postanu komplikovane.
+
+---
+
+## Prvi zid: TypeScript i sistem za izgradnju (build system)
+
+Obsidian dodaci su pisani u TypeScript-u i moraju se kompajlirati pre nego što prorade. Standardni pristup je kloniranje primjera dodatka sa GitHub-a, njegova izmjena i pokretanje `npm run build`.
+
+Ono što vam niko ne kaže jeste da primjer dodatka ima `src/` fasciklu sa stvarnim izvornim fajlovima, i `main.ts` u korijenu koji ne radi ništa. Uređivao sam pogrešan fajl tri puta pre nego što sam to shvatio.
+
+Onda su tu bile TypeScript greške. Zatim greške prilikom izgradnje. Onda bi se kompajlirani `main.js` učitao, ali bi tiho propao u pokušaju da registruje bilo kakve komande jer API dodatka očekuje specifične obrasce koje primjer dodatka ne objašnjava.
+
+Na kraju sam odstupio i pitao: da li mi je zapravo potreban TypeScript? Odgovor je bio ne. Obsidian sasvim dobro učitava običan JavaScript. Odbacio sam sistem za izgradnju u potpunosti i napisao `main.js` direktno.
+
+---
+
+## Drugi zid: Obsidianov bezbjednosni model
+
+Obsidian radi unutar Electron-a, koji je u suštini zaključan pregledač (browser). Kada sam pokušao da pozovem svoj lokalni TTS server koristeći `fetch()`, Obsidian je to blokirao. Politika bezbjednosti sadržaja (Content Security Policy). Pješčanik (sandbox) pregledača ne vjeruje `localhost` konekcijama napravljenim iz dodataka.
+
+Rješenje? Electron daje dodacima pristup Node.js sržnim modulima. Umjesto `fetch()`, koristio sam `http` modul, koji u potpunosti zaobilazi pješčanik pregledača jer radi na sistemskom nivou, a ne na nivou pregledača. Jednom kada sam napravio tu promjenu, konekcija je odmah proradila.
+
+---
+
+## Potpuno odbacivanje servera
+
+U nekom trenutku sam shvatio da pokrećem lokalni server samo da bih pozvao komandu koja je već bila na mašini. Sam TTS server je bio samo omot oko `say` komande. Tako da sam potpuno uklonio server.
+
+Novi pristup koristi Node.js `child_process` da direktno pozove `say`:
+
+```javascript
+const proc = child_process.spawn('say', ['-v', 'Samantha', '-r', '175', text]);
+```
+
+Ovo je čistije, brže i znači da bilo koji Mac korisnik može instalirati dodatak i on radi odmah, bez servera za podešavanje, bez Python okruženja, bez ičega.
+
+---
+
+## Funkcije koje su ušle u dodatak
+
+Do kraja, dodatak je imao:
+
+- **Čitanje cijele beleške** — čita cijelu belešku, pasus po pasus
+- **Pauziranje i nastavak** — koristeći Unix signale (`SIGSTOP` i `SIGCONT`) poslate direktno `say` procesu
+- **Zaustavljanje reprodukcije** — trenutno prekida proces
+- **Čuvanje kao MP3** — koristi `say` da generiše AIFF fajl, zatim `afconvert` (takođe ugrađen u macOS) da ga konvertuje u MP3, sačuvan u vašu fasciklu Preuzimanja (Downloads)
+- **Panel sa postavkama** — birač glasa koji čita sve instalirane glasove iz sistema, i klizač brzine od 100 do 400 riječi u minuti
+- **Traka sa alatkama (Ribbon) dugmad** za sve
+
+---
+
+## Stvar koja nije ušla u dodatak
+
+Proveo sam više vremena nego što bih volio da priznam pokušavajući da osposobim "čitanje selektovanog teksta" sa dugmeta na traci. Problem je suštinski: kada kliknete na dugme na traci, Obsidian pomjera fokus dalje od editora. Dok se dodatak pokrene, selekcija je nestala.
+
+Postoje zaobilazna rješenja — keširanje selekcije pri svakom pritisku tastera, na primjer, ali svaki pristup koji sam probao je uveo druge probleme. Na kraju sam to izostavio. Čist dodatak koji radi ono što piše je bolji od pokvarenog dodatka koji pokušava da uradi sve.
+
+---
+
+## Čuvanje u MP3
+
+Funkciji čuvanja je trebalo najduže da se sredi kako treba. Komanda `say` čuva audio u AIFF formatu, ne u MP3. Konvertovanje između njih zahtijeva `afconvert`, alatku komandne linije macOS-a za koju većina ljudi nikada nije čula iako dolazi sa svakim Mac-om.
+
+Procesni lanac izgleda ovako:
+
+```
+say → output.aiff → afconvert → output.mp3 → brisanje output.aiff
+```
+
+Dobijanje pravih oznaka (flags) formata za `say` je zahtijevalo nekoliko pokušaja. Oznaka `--data-format=aiff` koja se pojavljuje u raznim vodičima na mreži zapravo ne radi. Ispravan pristup je samo koristiti `-o filename.aiff` i pustiti `say` da shvati format iz ekstenzije.
+
+---
+
+## Objavljivanje
+
+Dodatak je otvorenog koda (open source) i dostupan je na GitHub-u na adresi [katnino/obsidian-mac-tts](https://github.com/katnino/obsidian-mac-tts).
+
+Samo je za macOS, što je u redu, `say` je Mac stvar. Ako imate Mac i koristite Obsidian, možete ga instalirati ručno odmah. Predaja za zvaničnu prodavnicu dodataka je u toku.
+
+---
+
+## Šta sam naučio
+
+Izrada Obsidian dodatka je pristupačnija nego što izgleda, jednom kada prođete pored TypeScript skela. API dodatka je dobro dizajniran, zajednica je aktivna, i Electron-ov pristup Node.js-u otvara mogućnosti koje alati zasnovani na pregledaču ne mogu ni da dotaknu. Smatram da je Obsidian veoma moćan alat i radi odličan posao na svim mojim uređajima.
+
+Veća pouka: ponekad je najbolji alat za posao sjedio na vašem računaru sve vrijeme, čekajući da bude povezan.
+
+Tako da, to je to, to je "priča" o pravljenju mog Obsidian dodatka.
+```
