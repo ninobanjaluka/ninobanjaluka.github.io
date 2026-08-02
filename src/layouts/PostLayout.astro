@@ -278,11 +278,22 @@ const blogPostingLd = [
         );
         if (candidates.length === 0) return;
 
+        function centerScroll() {
+            const overflowX = overlayImg!.scrollWidth - overlay!.clientWidth;
+            if (overflowX > 0) overlay!.scrollLeft = overflowX / 2;
+        }
+
         function openLightbox(img: HTMLImageElement) {
             overlayImg!.src = img.currentSrc || img.src;
             overlayImg!.alt = img.alt || '';
             overlay!.hidden = false;
+            overlay!.scrollLeft = 0;
             document.body.style.overflow = 'hidden';
+            if (overlayImg!.complete) {
+                centerScroll();
+            } else {
+                overlayImg!.addEventListener('load', centerScroll, { once: true });
+            }
         }
 
         function closeLightbox() {
@@ -470,11 +481,26 @@ const blogPostingLd = [
         .lightbox {
             padding: 0;
             height: 100dvh;
+            display: block;
+            text-align: center;
+            white-space: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .lightbox::-webkit-scrollbar {
+            display: none;
         }
         .lightbox__img {
-            max-width: 100vw;
-            max-height: 100dvh;
+            display: inline-block;
+            height: 100dvh;
+            width: auto;
+            max-width: none;
+            max-height: none;
+            vertical-align: middle;
             border-radius: 0;
+            box-shadow: none;
         }
         .lightbox__close {
             top: env(safe-area-inset-top, 12px);
