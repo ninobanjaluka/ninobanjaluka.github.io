@@ -126,7 +126,6 @@ const blogPostingLd = [
                 src={coverImage}
                 alt={title}
                 class="post__hero-img"
-                data-lightbox="true"
             />
         </div>
     )}
@@ -231,11 +230,6 @@ const blogPostingLd = [
             )
         }
     </article>
-
-    <div class="lightbox" data-lightbox-overlay hidden>
-        <button class="lightbox__close" data-lightbox-close aria-label="Close">✕</button>
-        <img class="lightbox__img" data-lightbox-img alt="" />
-    </div>
 </BaseLayout>
 
 <script>
@@ -267,48 +261,8 @@ const blogPostingLd = [
             localStorage.setItem('post-lang', showingEn ? 'sr' : 'en');
         });
     }
-    function initLightbox() {
-        const overlay = document.querySelector<HTMLElement>('[data-lightbox-overlay]');
-        const overlayImg = document.querySelector<HTMLImageElement>('[data-lightbox-img]');
-        const closeBtn = document.querySelector<HTMLButtonElement>('[data-lightbox-close]');
-        if (!overlay || !overlayImg || !closeBtn) return;
-
-        const candidates = document.querySelectorAll<HTMLImageElement>(
-            '.prose img, [data-lightbox="true"]'
-        );
-        if (candidates.length === 0) return;
-
-        function openLightbox(img: HTMLImageElement) {
-            overlayImg!.src = img.currentSrc || img.src;
-            overlayImg!.alt = img.alt || '';
-            overlay!.hidden = false;
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeLightbox() {
-            overlay!.hidden = true;
-            overlayImg!.src = '';
-            document.body.style.overflow = '';
-        }
-
-        candidates.forEach((img) => {
-            img.style.cursor = 'zoom-in';
-            img.addEventListener('click', () => openLightbox(img));
-        });
-
-        closeBtn.addEventListener('click', closeLightbox);
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) closeLightbox();
-        });
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !overlay!.hidden) closeLightbox();
-        });
-    }
-
     initLangToggle();
-    initLightbox();
     document.addEventListener('astro:page-load', initLangToggle);
-    document.addEventListener('astro:page-load', initLightbox);
 </script>
 
 <style>
@@ -418,61 +372,6 @@ const blogPostingLd = [
         }
         .post--has-hero {
             padding-top: 32px;
-        }
-    }
-
-    .lightbox {
-        position: fixed;
-        inset: 0;
-        z-index: 10000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 40px;
-        background: rgba(8, 8, 8, 0.92);
-        backdrop-filter: blur(4px);
-        cursor: zoom-out;
-        animation: lightbox-fade 0.15s ease-out;
-    }
-    .lightbox[hidden] {
-        display: none;
-    }
-    .lightbox__img {
-        max-width: 100%;
-        max-height: 100%;
-        border-radius: 4px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-        cursor: default;
-    }
-    .lightbox__close {
-        position: absolute;
-        top: 24px;
-        right: 32px;
-        background: none;
-        border: 1px solid var(--color-border);
-        color: var(--color-text);
-        font-family: var(--font-mono);
-        font-size: 16px;
-        line-height: 1;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        cursor: pointer;
-        transition:
-            color 0.2s,
-            border-color 0.2s;
-    }
-    .lightbox__close:hover {
-        color: var(--color-accent);
-        border-color: rgba(251, 191, 36, 0.4);
-    }
-    @media (max-width: 640px) {
-        .lightbox {
-            padding: 16px;
-        }
-        .lightbox__close {
-            top: 12px;
-            right: 12px;
         }
     }
 </style>
