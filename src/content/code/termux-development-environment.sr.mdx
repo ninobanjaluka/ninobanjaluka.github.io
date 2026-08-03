@@ -1,0 +1,59 @@
+---
+title: "Termux kao pravo razvojno okruženje"
+date: 2026-02-08
+excerpt: "Pokretanje agenata, SSH tunela i skripti za automatizaciju na Androidu, iznenađujuće sposoban setap."
+tech: ["Termux", "Android", "SSH", "Tailscale"]
+tags: ["android", "termux", "mobile-dev", "ssh"]
+---
+
+Imam telefon koji pokreće Android 16, tablet na Androidu 11 i Nexus 7 koji nikako ne bi trebalo da bude i dalje koristan, ali jeste. I te kako. Sva tri su povezana preko Tailscale-a. Sva tri pokreću Termux i zajedno čine iznenađujuće sposobno distribuirano okruženje za nekoga ko provodi mnogo vremena daleko od stola. OK, ne baš, jer provodim skoro svaki sat koji sam budan iza ekrana. No, nebitno.
+
+## Zašto Termux
+
+Ako niste upoznati: Termux je emulator terminala i Linux okruženje za Android koje ne zahtjeva root pristup. Ima sopstveni menadžer paketa (`pkg`), pravi `shell` i dovoljno paketa za obavljanje pravog posla. Besplatan je, a verzija koju želite je sa F-Droid-a, jer je verzija sa Play Store-a zastarjela.
+
+## Za šta ga stvarno koristim
+
+**SSH pristup svuda.** Pokrećem `sshd` na svakom uređaju, koji se automatski pokreće pri dizanju sistema preko Termux:Boot-a. U kombinaciji sa Tailscale-om, mogu da se SSH-ujem sa bilo kog uređaja na bilo koji drugi uređaj na mojoj mreži bez obzira na to da li sam u kući ili gledam Čarlija kako vrši nuždu na obali Vrbasa. Ovo je zaista korisno kada laptop nešto radi, a ja imam samo telefon.
+
+**Pokretanje agenata.** Hermes Agent radi na Termux-u na telefonu. Jednako je moćan kao na MacPro-u, a za zadatke koji nisu vremenski osjetljivi radi besprekorno. Konfiguracija se nalazi u `~/.hermes/.env` isto kao na desktop verziji.
+
+**Skripte za automatizaciju.** Jednostavne Bash skripte koje se pokreću po rasporedu preko Termux:Boot-a — proveravaju stvari, šalju obavještenja, održavaju servise u životu.
+
+## Termux:Boot postavka
+
+Ovo je dio koji zbunjuje ljude. Morate da instalirate Termux:Boot dodatak (sa F-Droid-a, isto kao i sam Termux). Zatim kreirajte folder za skripte:
+
+```bash
+mkdir -p ~/.termux/boot
+```
+
+Bilo koja skripta u tom folderu se pokreće pri dizanju uređaja. Evo kako izgleda moj `sshd.sh`:
+
+```bash
+#!/data/data/com.termux/files/usr/bin/bash
+# Pokreni SSH demon pri dizanju sistma
+sshd
+```
+
+Učinite ga izvršnim:
+
+```bash
+chmod +x ~/.termux/boot/sshd.sh
+```
+
+Zatim otvorite aplikaciju Termux:Boot jednom da biste je omogućili. To je to.
+
+## Tailscale na Androidu
+
+Instalirajte sa Play Store-a. Prijavite se. Svaki uređaj na "tailnet-u" sada može da pristupi svakom drugom uređaju preko njegove Tailscale IP adrese ili imena hosta, kroz NAT, sa bilo kog mesta. Telefon može da se SSH-uje na MacPro preko 4G mreže. MacPro može da pristupi telefonu ako zatreba. Ništa nije izloženo javnom internetu.
+
+## Problem sa Nexus-om 7
+
+On pokreće Android 5.1. Termux se i dalje instalira. Verzije paketa su prastare. Polovina stvari koje pokušam da uradim na njemu ne uspeva zbog nepodudaranja verzija glibc-a. Ali sasvim dobro pokreće `sshd` i služi kao koristan terminal koji je uvek uključen kada je priključen na punjač. Za sedam evra na buvljaku, ne žalim se.
+
+## Šta ne radi dobro
+
+Bilo šta što intenzivno koristi CPU. Lokalno LLM zaključivanje (inference) je presporo da bi bilo korisno na hardveru telefona, to prebacujem na MacPro preko gejtveja. Takođe, *copy-paste* između terminala i ostatka Androida je i dalje mala svakodnevna smetnja u 2026. godini.
+
+Sve u svemu, isplati se. Samo postavka "SSH-svuda" me je spasila dovoljno puta da opravda vrijeme početne konfiguracije.
