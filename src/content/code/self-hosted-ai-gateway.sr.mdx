@@ -1,0 +1,60 @@
+---
+title: "Izgradnja 'self-hosted' AI gejtveja na Intel Mac-u"
+date: 2026-04-20
+excerpt: "Kao eksperiment, pokretao sam sopstveni LLM sloj za rutiranje umjesto direktnog pozivanja API-ja. Ovo je kratak sažetak toga i kako je stvarna postavka izgledala."
+tech: ["Node.js", "launchd", "Telegram", "OpenClaw"]
+tags: ["devlog", "self-hosted", "llm", "macos"]
+---
+
+Većina ljudi koji koriste AI API-je ih samo direktno poziva. Ključ u `.env` fajlu, `fetch` poziv, gotovo. Istraživao sam rešenja za prosleđivanje modela (model relay) i krenuo sam u tom drugom pravcu, i već nekoliko meseci pokrećem sopstveno lokalno rutiranje. Evo zašto, i kako to izgleda "ispod haube".
+
+## Zašto uopšte rutiranje modela?
+
+Tri razloga:
+
+**Rezervno rutiranje (Fallback routing).** Ako je moj primarni provajder van mreže ili mu je ograničen broj zahteva (rate-limited), želim da zahtevi automatski idu na sekundarni. Bez rutera, ta logika živi u svakoj aplikaciji, što nije bilo moguće, barem ne u vreme kada sam sproveo eksperiment "Dva rutera - 7 agenata".
+
+**Podrška za lokalne modele.** Pokrećem KoboldCpp, Llama.cpp i Ollama za zaključivanje (inference) na lokalnim GGUF modelima, zavisno od slučaja upotrebe. Prosleđivanje modela mi omogućava da neke zahteve usmerim tamo, što je jeftinije za zadatke koji ne zahtevaju vrhunski model (frontier model).
+
+**Jedinstvena krajnja tačka (Single endpoint).** Moj Telegram bot, moji cron poslovi, moji CLI alati, svi oni komuniciraju sa `localhost`-om. Promena provajdera znači promenu konfiguracije u jednom fajlu, a ne pretragu kroz svaki projekat.
+
+## Hardver
+
+Intel MacPro, x86_64. Ovo je važno jer većina AI alata u 2026. godini podrazumeva Apple Silicon ili CUDA GPU. Ja nemam ništa od toga. Metal ubrzanje nije dostupno na arhitekturi MacPro-a, a iako imam AMD Radeon na MacBook-u, llama.cpp ne radi baš najbolje sa njim za zaključivanje.
+
+Tako da sve radi na CPU-u. KoboldCpp je najefikasnija opcija koju sam pronašao, otprilike 30% brža od Ollama-e na ovom hardveru za iste GGUF modele.
+Trik u rukavu Kobold-a je prebacivanje nekih slojeva na AMD GPU. Moj Mac to voli, a mrzi Ollama-u toliko da pokreće ventilatore za najviše 2 minuta.
+
+## Stek
+
+```
+OpenClaw/Hermes (gejtvej, port 18789 itd.)
+  ├── Provajder: Anthropic Claude ili Štagod (primarni)
+  ├── Provajder: OpenAI (rezervni)
+  ├── Provajder: KoboldCpp localhost (lokalni)
+  └── Memorija: QMD vektorski bek-end
+```
+
+OpenClaw radi kao `launchd` servis, Hermes to radi samostalno, tako da se sve pokreće pri dizanju sistema i ponovo pokreće ako dođe do pada. Plist fajl se nalazi u `~/Library/LaunchAgents/`.
+
+## Memorija
+
+Ovo je bio najteži deo da se namesti kako treba. QMD bek-end koristi `node-llama-cpp` za ugrađivanje (embedding), koji je pri prvom pokretanju pokušao da detektuje CUDA-u i pao uz puno buke. Rešenje je bilo postavljanje `GGML_CUDA=0` u rečnik okruženja (environment dictionary) `launchd`-a.
+
+Nakon toga, vektorska memorija radi pouzdano. Agent, kojeg zovem Hal, može da referencira stvari iz prethodnih razgovora, što čini dnevne brifinge cron poslova znatno korisnijim.
+
+## Telegram integracija
+
+Svakog jutra u 08:00, cron posao traži od Hala brifing o vremenu i vestima za Banjaluku. Odgovor stiže kao Telegram poruka preko bota. Potrebne su oko četiri sekunde od okidanja do isporuke. To je jedna od onih malih automatizacija zbog kojih se cela postavka čini vrednom truda.
+
+```bash
+# Jutarnji cron — 08:00 svakodnevno
+0 8 * * * /usr/local/bin/openclaw run --prompt "Jutarnji brifing: vreme i naslovi za Banjaluku danas"
+```
+
+## Šta bih uradio drugačije
+
+Situacija sa `launchd` promenljivim okruženja je pipava. Svaki put kada promenite ključ, morate da uradite `launchctl unload` i `launchctl load` za plist fajl. Skriptovao sam ovo, ali me i dalje uhvati nespremnog kada debugujem u 23h.
+
+U suprotnom, radi. Stabilno mesecima. Vredi vremena utrošenog na podešavanje.
+Eksperimentisati znači živeti, barem za mene, i nije važno da li je to kod, boja ili melodija. YOLO.
