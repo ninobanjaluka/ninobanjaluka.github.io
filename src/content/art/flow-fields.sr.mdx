@@ -1,0 +1,72 @@
+---
+title: "Polja strujanja i zašto ne mogu prestati da ih pravim"
+date: 2026-03-28
+excerpt: "Perlinov šum, element platna (canvas) i nekoliko sati posmatranja linija kako se krive na načine koje nisam u potpunosti predvideo."
+medium: "Generativna / Digitalna"
+tools: ["p5.js", "JavaScript", "Canvas API"]
+tags: ["generative", "flow-fields", "creative-coding"]
+---
+
+Polje strujanja je mreža uglova. Svaka tačka u prostoru ima pravac, i ako tu postavite česticu, ona prati taj pravac, zatim se pomjera do sljedeće tačke i prati onaj u toj tački, i tako dalje sve dok ili ne napusti platno ili vam ne dosadi pa je zaustavite.
+
+Zanimljiv dio je kako definišete uglove. Najčešći metod je Perlinov šum, funkcija koja proizvodi glatku, organsku nasumičnost. Za razliku od čiste nasumičnosti, Perlinov šum ima koherentnost: obližnje tačke u prostoru šuma vraćaju slične vrednosti. Zbog toga rezultati polja strujanja izgledaju kao vjetar ili voda, a ne kao statički šum.
+
+## Postavka
+
+```javascript
+let particles = [];
+const PARTICLE_COUNT = 1200;
+const FIELD_SCALE = 0.003;
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  background(10, 10, 10);
+  strokeWeight(0.8);
+  
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    particles.push({
+      x: random(width),
+      y: random(height),
+      age: random(200),
+    });
+  }
+}
+
+function draw() {
+  for (let p of particles) {
+    const angle = noise(p.x * FIELD_SCALE, p.y * FIELD_SCALE) * TWO_PI * 2;
+    const speed = 2;
+    
+    p.x += cos(angle) * speed;
+    p.y += sin(angle) * speed;
+    p.age++;
+    
+    const alpha = map(p.age, 0, 300, 150, 0);
+    stroke(251, 191, 36, alpha);
+    point(p.x, p.y);
+    
+    // Resetuj kada ostari ili izađe sa platna
+    if (p.age > 300 || p.x < 0 || p.x > width || p.y < 0 || p.y > height) {
+      p.x = random(width);
+      p.y = random(height);
+      p.age = 0;
+    }
+  }
+}
+```
+
+## Šta mi se zapravo dopada u vezi sa tim
+
+Rezultat zavisi od pomaka šuma, faktora razmjere, broja čestica, brzine i načina na koji rukujete bojom. Promjenite bilo šta od ovoga i dobićete nešto sasvim drugo.
+
+Ono što smatram zaraznim je to što se svaka konfiguracija čini kao otkriće, a ne kao dizajn. Ne crtam ništa, biram pravila, a pravila crtaju nešto, i ponekad je to tačno ono što sam očekivao, a ponekad je zaista iznenađujuće.
+
+Ćilibar na crnoj je moja podrazumevana paleta jer se slaže sa svime ostalim što pravim. Ali radio sam verzije u mekoj plavoj na skoro crnoj koje izgledaju kao duboke okeanske struje, a jednom sam slučajno proizveo nešto što je izgledalo kao topografska mapa mesta na kojem nikada nisam bio.
+
+## Problem strpljenja
+
+Poljima strujanja treba vremena da se otkriju. Prvih stotinu frejmova izgleda kao šum. Do petstotog frejma, struktura se pojavljuje. Do dvehiljaditog frejma, počinjete da vidite slivove i atraktore u polju, regione gde čestice teže da se grupišu ili da ih izbegavaju.
+
+Ovo nije kompatibilno sa modernim rasponom pažnje, uključujući i moj. Obično ih pustim da rade u posebnom prozoru dok radim nešto drugo, a onda povremeno pogledam.
+
+To je razuman način za stvaranje umjetnosti, ako ovo možemo tako nazvati. Pojmanemam.
