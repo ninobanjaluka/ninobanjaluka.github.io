@@ -1,13 +1,13 @@
 ---
 title: "Building a Breathing Exercise App"
 date: "2026-08-08"
-excerpt: "A self-contained breathing coach with visual, sound, and vibration cues — built as a single HTML file and dropped straight into this site."
+excerpt: "A self-contained breathing coach with visual, sound, and vibration cues, built as a single HTML file and dropped straight into this site."
 tech: ["HTML"]
 tags: ["javascript", "web-audio-api", "pwa", "side-project"]
 ---
-I wanted a simple breathing exercise tool — something with a set of guided patterns across a few moods (winding down, staying balanced, sharpening focus), that cues each phase visually, audibly, and with a vibration, so I don't have to keep my eyes locked on the screen while I breathe.
+I wanted a simple breathing exercise tool, something with a set of guided patterns across a few moods (winding down, staying balanced, sharpening focus), that cues each phase visually, audibly, and with a vibration, so I don't have to keep my eyes locked on the screen while I breathe.
 
-Rather than reach for a framework, it's a single self-contained HTML file: no build step, no dependencies beyond a Google Fonts link. Everything — layout, animation, audio, state — lives in one file, which made it trivial to drop straight into `public/` on this site.
+Rather than reach for a framework, it's a single self-contained HTML file: no build step, no dependencies beyond a Google Fonts link. Everything: layout, animation, audio, state, lives in one file, which made it trivial to drop straight into `public/` on this site.
 
 ## How it's structured
 
@@ -29,7 +29,7 @@ This was the actual point of the exercise. Three layers run in sync for every ph
 
 ## Bilingual UI
 
-Since most things on this site ship in both English and Serbian Latin, the app has a language toggle that swaps every string — category names, exercise names, phase labels, buttons — via a small i18n dictionary, no page reload needed.
+Since most things on this site ship in both English and Serbian Latin, the app has a language toggle that swaps every string, category names, exercise names, phase labels, buttons, via a small i18n dictionary, no page reload needed.
 
 Check it out:
 
