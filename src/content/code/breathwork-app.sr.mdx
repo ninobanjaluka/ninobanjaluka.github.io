@@ -5,30 +5,38 @@ excerpt: "Vodič za disanje sa vizuelnim, zvučnim i vibracionim signalima — n
 tech: ["HTML"]
 tags: ["javascript", "web-audio-api", "pwa", "side-project"]
 ---
-Hteo sam jednostavan alat za vežbe disanja — nešto sa gotovim šablonima za nekoliko različitih stanja (opuštanje, ravnoteža, fokus), koji signalizira svaku fazu vizuelno, zvučno i vibracijom, tako da ne moram da gledam u ekran dok dišem.
+Htjeo sam jednostavan alat za vježbe disanja, nešto sa gotovim šablonima za nekoliko različitih stanja (opuštanje, ravnoteža, fokus), koji signalizira svaku fazu vizuelno, zvučno i vibracijom, tako da ne moram da gledam u ekran dok dišem.
 
-Umesto da posegnem za frameworkom, ovo je jedan samostalan HTML fajl: bez build koraka, bez zavisnosti osim linka ka Google Fonts-u. Sve — raspored, animacije, zvuk, stanje — živi u jednom fajlu, pa je bilo trivijalno da ga stavim direktno u `public/` folder ovog sajta.
+Umjesto da posegnem za nekim frameworkom, ovo je jedan samostalan HTML fajl: bez build koraka, bez zavisnosti osim linka ka Google Fonts-u. Sve; raspored, animacije, zvuk, stanje, živi u jednom fajlu, pa je bilo trivijalno da ga stavim direktno u `public/` folder ovog sajta.
 
 ## Kako je struktuirano
 
-Vežbe su podeljene u tri kategorije, svaka sa po šest šablona rastuće složenosti:
+Vježbe su podeljene u tri kategorije, svaka sa po šest šablona rastuće složenosti:
 
 - **Odmor i opuštanje** — Oporavak, Odvajanje, Smirenost, Rasterećenje, Spokojstvo, Uspavljivanje
 - **Ravnoteža i otpornost** — Ravnoteža, Usklađenost, Rezonanca, Harmonija, Tok, Svesnost
 - **Fokus i učinak** — Fokus, Jasnoća, Buđenje, Espreso, Punjenje energije, Izdržljivost
 
-Svaki šablon su četiri broja — udah / zadrži / izdah / zadrži, u sekundama — pa "4 7 8 0" znači udah od 4 sekunde, zadrži 7 sekundi, izdah od 8 sekundi, bez drugog zadržavanja.
+Svaki šablon su četiri broja: udah / zadrži / izdah / zadrži, u sekundama — pa "4 7 8 0" znači udah od 4 sekunde, zadrži 7 sekundi, izdah od 8 sekundi, bez drugog zadržavanja.
 
 ## Sistem signalizacije
 
-Ovo je zapravo bila suština čitave vežbe. Tri sloja rade usklađeno pri svakom prelazu faze:
+Ovo je zapravo bila suština čitave vježbe. Tri sloja rade usklađeno pri svakom prelazu faze:
 
-- **Vizuelno** — sfera koja svetli se širi pri udahu i skuplja pri izdahu, koristeći Web Animations API kako bi moglo glatko da se pauzira i nastavi. Prsten napretka oko nje se puni u realnom vremenu preko animiranog SVG stroke-dashoffset-a.
-- **Zvučno** — Web Audio API generiše kratak dvotonski zvuk plus ton sa promenom frekvencije na početku svake faze: rastući ton za udah, opadajući za izdah, stabilan zvuk za zadržavanje. Bez audio fajlova — sve se generiše u letu.
-- **Vibracija** — Vibration API pokreće poseban obrazac vibracije za svaku fazu (kratak za udah, duži za izdah, dupli impuls za zadržavanje), tako da se signal oseti čak i kad je telefon okrenut ekranom nadole. Ovo radi samo na Android Chrome/Firefox pregledačima — iOS Safari ne podržava ovaj API.
+- **Vizuelno** — sfera koja svijetli se širi pri udahu i skuplja pri izdahu, koristeći Web Animations API kako bi moglo glatko da se pauzira i nastavi. Prsten napretka oko nje se puni u realnom vremenu preko animiranog SVG stroke-dashoffset-a.
+- **Zvučno** — Web Audio API generiše kratak dvotonski zvuk plus ton sa promenom frekvencije na početku svake faze: rastući ton za udah, opadajući za izdah, stabilan zvuk za zadržavanje. Bez audio fajlova, sve se generiše u letu.
+- **Vibracija** — Vibration API pokreće poseban obrazac vibracije za svaku fazu (kratak za udah, duži za izdah, dupli impuls za zadržavanje), tako da se signal osjeti čak i kad je telefon okrenut ekranom nadole. Ovo radi samo na Android Chrome/Firefox pregledačima, a iOS Safari ne podržava ovaj API.
 
 ## Dvojezični interfejs
 
-Pošto većina sadržaja na ovom sajtu izlazi i na engleskom i na srpskom (latinica), aplikacija ima prekidač jezika koji menja svaki tekst — nazive kategorija, vežbi, faza, dugmadi — preko malog i18n rečnika, bez ponovnog učitavanja stranice.
+Pošto većina sadržaja na ovom sajtu izlazi i na engleskom i na srpskom (latinica), aplikacija ima prekidač jezika koji mijenja svaki tekst — nazive kategorija, vježbi, faza, dugmadi — preko malog i18n riječnika, bez ponovnog učitavanja stranice.
 
-Isprobaj: https://ninobanjaluka.github.io/breathe/index.html
+Isprobaj:
+
+<iframe
+  src="/breathe/index.html"
+  style="width:100%; max-width:420px; height:780px; border:none; background:#080B10;"
+  title="Breathing exercise app"
+></iframe>
+
+[Open full-screen →](/breathe/index.html)
