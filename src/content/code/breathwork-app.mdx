@@ -1,0 +1,34 @@
+---
+title: "Building a Breathing Exercise App"
+date: "2026-08-08"
+excerpt: "A self-contained breathing coach with visual, sound, and vibration cues — built as a single HTML file and dropped straight into this site."
+tech: ["HTML"]
+tags: ["javascript", "web-audio-api", "pwa", "side-project"]
+---
+I wanted a simple breathing exercise tool — something with a set of guided patterns across a few moods (winding down, staying balanced, sharpening focus), that cues each phase visually, audibly, and with a vibration, so I don't have to keep my eyes locked on the screen while I breathe.
+
+Rather than reach for a framework, it's a single self-contained HTML file: no build step, no dependencies beyond a Google Fonts link. Everything — layout, animation, audio, state — lives in one file, which made it trivial to drop straight into `public/` on this site.
+
+## How it's structured
+
+Exercises are grouped into three categories, each with six patterns of increasing complexity:
+
+- **Rest & Relax** — Recover, Detach, Calm, Unwind, Tranquility, Fall Asleep
+- **Balance & Resilience** — Balance, Coherence, Resonance, Harmony, Flow, Awareness
+- **Focus & Performance** — Focus, Clarity, Wake Up, Espresso, Recharge, Endurance
+
+Each pattern is four numbers — inhale / hold / exhale / hold, in seconds — so "4 7 8 0" is a 4-second inhale, 7-second hold, 8-second exhale, no second hold.
+
+## The cueing system
+
+This was the actual point of the exercise. Three layers run in sync for every phase transition:
+
+- **Visual** — a glowing orb scales up on inhale and down on exhale, using the Web Animations API so it can be paused and resumed cleanly. A progress ring around it fills in real time using an animated SVG stroke-dashoffset.
+- **Sound** — the Web Audio API generates a short two-note chime plus a frequency-ramped tone at the start of each phase: rising pitch for inhale, falling pitch for exhale, a steady blip for hold. No audio files, everything is synthesized on the fly.
+- **Vibration** — the Vibration API fires a distinct pulse pattern per phase (short for inhale, longer for exhale, double-pulse for hold), so the cue is felt even with the phone face-down. This only works on Android Chrome/Firefox — iOS Safari doesn't expose the API.
+
+## Bilingual UI
+
+Since most things on this site ship in both English and Serbian Latin, the app has a language toggle that swaps every string — category names, exercise names, phase labels, buttons — via a small i18n dictionary, no page reload needed.
+
+Try it: https://ninobanjaluka.github.io/breathe/index.html
