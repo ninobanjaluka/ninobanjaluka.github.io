@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<!-- saved from url=(0062)file:///Users/noniboy/ers-calculator/docs/codemap/codemap.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Struja Code Map</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #071017;
+        --bg-2: #0b1620;
+        --panel: rgba(9, 18, 28, 0.88);
+        --panel-2: rgba(14, 26, 38, 0.9);
+        --border: rgba(148, 163, 184, 0.18);
+        --text: #dce7ef;
+        --muted: #94a3b8;
+        --subtle: #607086;
+        --accent: #8fd3ff;
+        --accent-2: #f4c67a;
+        --accent-3: #81e6c6;
+        --accent-4: #f78f9c;
+        --shadow: 0 28px 80px rgba(0, 0, 0, 0.45);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background:
+          radial-gradient(circle at top left, rgba(143, 211, 255, 0.18), transparent 34%),
+          radial-gradient(circle at top right, rgba(244, 198, 122, 0.14), transparent 28%),
+          radial-gradient(circle at bottom right, rgba(129, 230, 198, 0.1), transparent 28%),
+          linear-gradient(180deg, #051018, #09131c 48%, #071018);
+        color: var(--text);
+        font: 14px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+        background-size: 32px 32px;
+        mask-image: radial-gradient(circle at center, black 35%, transparent 100%);
+        opacity: 0.4;
+      }
+
+      .shell {
+        position: relative;
+        max-width: 1680px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+
+      .hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 24px;
+        padding: 22px 24px;
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        background:
+          linear-gradient(135deg, rgba(12, 21, 31, 0.92), rgba(8, 16, 24, 0.86)),
+          linear-gradient(135deg, rgba(143, 211, 255, 0.04), rgba(244, 198, 122, 0.02));
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
+      }
+
+      .eyebrow {
+        color: var(--accent-2);
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        font-size: 10px;
+        margin-bottom: 10px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(28px, 4vw, 48px);
+        letter-spacing: -0.04em;
+        line-height: 1.05;
+      }
+
+      .hero p {
+        max-width: 760px;
+        margin: 10px 0 0;
+        color: var(--muted);
+      }
+
+      .hero-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        min-width: 320px;
+      }
+
+      .stat {
+        padding: 14px 16px;
+        border-radius: 18px;
+        background: rgba(10, 19, 29, 0.82);
+        border: 1px solid rgba(148, 163, 184, 0.15);
+      }
+
+      .stat strong {
+        display: block;
+        font-size: 22px;
+        line-height: 1.1;
+      }
+
+      .stat span {
+        color: var(--muted);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+      }
+
+      .toolbar {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin: 18px 0;
+      }
+
+      .search {
+        flex: 1 1 320px;
+        min-width: 260px;
+        padding: 14px 16px;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        color: var(--text);
+        background: rgba(10, 20, 30, 0.86);
+        outline: none;
+        box-shadow: var(--shadow);
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: rgba(11, 19, 28, 0.82);
+        color: var(--muted);
+        cursor: pointer;
+        transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+      }
+
+      .chip:hover {
+        transform: translateY(-1px);
+        border-color: rgba(143, 211, 255, 0.4);
+      }
+
+      .chip.active {
+        color: var(--text);
+        border-color: rgba(143, 211, 255, 0.55);
+        background: rgba(27, 42, 58, 0.95);
+      }
+
+      .workspace {
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) 360px;
+        gap: 18px;
+        align-items: start;
+      }
+
+      .graph-panel,
+      .details,
+      .flows {
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
+      }
+
+      .graph-panel {
+        padding: 18px;
+      }
+
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 14px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .legend .swatch {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        margin-right: 8px;
+      }
+
+      .graph-wrap {
+        position: relative;
+        min-height: 860px;
+        border-radius: 20px;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01)),
+          radial-gradient(circle at 20% 20%, rgba(143, 211, 255, 0.05), transparent 22%),
+          radial-gradient(circle at 80% 80%, rgba(244, 198, 122, 0.04), transparent 24%);
+        overflow: hidden;
+      }
+
+      #edges,
+      #nodes {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      #edges {
+        pointer-events: none;
+      }
+
+      .node {
+        position: absolute;
+        width: 186px;
+        transform: translate(-50%, -50%);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        border-radius: 18px;
+        background: rgba(12, 22, 31, 0.9);
+        color: var(--text);
+        padding: 12px 14px;
+        cursor: pointer;
+        text-align: left;
+        box-shadow: 0 18px 28px rgba(0, 0, 0, 0.24);
+        transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
+      }
+
+      .node:hover {
+        transform: translate(-50%, -50%) scale(1.02);
+        border-color: rgba(143, 211, 255, 0.45);
+        box-shadow: 0 22px 38px rgba(0, 0, 0, 0.3);
+      }
+
+      .node.active {
+        border-color: rgba(143, 211, 255, 0.8);
+        box-shadow: 0 0 0 1px rgba(143, 211, 255, 0.35), 0 20px 40px rgba(0, 0, 0, 0.36);
+      }
+
+      .node.dim {
+        opacity: 0.18;
+      }
+
+      .node .category {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 8px;
+        color: var(--muted);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+      }
+
+      .node .category::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--dot, var(--accent));
+      }
+
+      .node strong {
+        display: block;
+        font-size: 15px;
+        line-height: 1.2;
+        margin-bottom: 6px;
+      }
+
+      .node small {
+        display: block;
+        color: var(--subtle);
+        font-size: 11px;
+        line-height: 1.35;
+      }
+
+      .node .meta {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--muted);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+      }
+
+      .details {
+        position: sticky;
+        top: 18px;
+        padding: 18px;
+      }
+
+      .details h2 {
+        margin: 0;
+        font-size: 22px;
+        line-height: 1.1;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 10px;
+        padding: 7px 11px;
+        border-radius: 999px;
+        background: rgba(143, 211, 255, 0.1);
+        color: var(--accent);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+      }
+
+      .detail-block {
+        margin-top: 18px;
+        padding-top: 16px;
+        border-top: 1px solid rgba(148, 163, 184, 0.16);
+      }
+
+      .detail-block h3 {
+        margin: 0 0 10px;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        color: var(--muted);
+      }
+
+      .detail-block ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 8px;
+      }
+
+      .detail-block li {
+        padding: 10px 12px;
+        border-radius: 14px;
+        background: rgba(11, 20, 31, 0.88);
+        border: 1px solid rgba(148, 163, 184, 0.12);
+        color: var(--text);
+      }
+
+      .detail-block li span {
+        display: block;
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .paths {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .path-chip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.16);
+        background: rgba(8, 16, 25, 0.88);
+        font-size: 12px;
+        color: var(--text);
+      }
+
+      button.path-chip {
+        cursor: pointer;
+        font: inherit;
+      }
+
+      .flow-card {
+        padding: 16px 18px;
+        border-radius: 18px;
+        border: 1px solid var(--border);
+        background: rgba(11, 20, 31, 0.88);
+        cursor: pointer;
+        transition: transform 160ms ease, border-color 160ms ease;
+      }
+
+      .flow-card:hover {
+        transform: translateY(-1px);
+        border-color: rgba(143, 211, 255, 0.4);
+      }
+
+      .flow-card.active {
+        border-color: rgba(244, 198, 122, 0.55);
+        box-shadow: 0 0 0 1px rgba(244, 198, 122, 0.22);
+      }
+
+      .flow-card strong {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 14px;
+      }
+
+      .flow-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .flows {
+        margin-top: 18px;
+        padding: 18px;
+      }
+
+      .flows h2 {
+        margin: 0 0 14px;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: var(--muted);
+      }
+
+      .flow-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      svg path.edge {
+        fill: none;
+        stroke-width: 2.2;
+        opacity: 0.55;
+      }
+
+      svg path.edge.dim {
+        opacity: 0.09;
+      }
+
+      svg path.edge.active {
+        opacity: 0.95;
+        stroke-width: 3.6;
+      }
+
+      @media (max-width: 1260px) {
+        .workspace {
+          grid-template-columns: 1fr;
+        }
+
+        .details {
+          position: relative;
+          top: auto;
+        }
+
+        .flow-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 780px) {
+        .shell {
+          padding: 16px;
+        }
+
+        .hero {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .hero-stats {
+          width: 100%;
+          min-width: 0;
+        }
+
+        .flow-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .node {
+          width: 172px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="hero">
+        <div>
+          <div class="eyebrow">ERS calculator code map</div>
+          <h1>Interactive code map</h1>
+          <p>
+            Click any module to inspect callers, dependencies, downstream impact,
+            related tests, and the source files that back it.
+          </p>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><strong id="nodeCount">19</strong><span>primary nodes</span></div>
+          <div class="stat"><strong id="flowCount">5</strong><span>end-to-end flows</span></div>
+          <div class="stat"><strong>3</strong><span>tested core libs</span></div>
+        </div>
+      </header>
+
+      <div class="toolbar">
+        <input id="search" class="search" type="search" placeholder="Search modules, files, notes...">
+        <button class="chip" data-category="all" type="button">All</button>
+        <button class="chip" data-category="route" type="button">Routes</button>
+        <button class="chip" data-category="page" type="button">Pages</button>
+        <button class="chip" data-category="action" type="button">Actions</button>
+        <button class="chip" data-category="lib" type="button">Lib</button>
+        <button class="chip" data-category="component" type="button">UI</button>
+        <button class="chip" data-category="infra" type="button">Infra</button>
+        <button class="chip active" data-category="db" type="button">DB</button>
+        <button class="chip" data-category="external" type="button">External</button>
+      </div>
+
+      <section class="workspace">
+        <div class="graph-panel">
+          <div class="legend">
+            <span><i class="swatch" style="background: var(--accent)"></i>routes/pages</span>
+            <span><i class="swatch" style="background: var(--accent-3)"></i>actions/infra</span>
+            <span><i class="swatch" style="background: var(--accent-2)"></i>lib/data</span>
+            <span><i class="swatch" style="background: var(--accent-4)"></i>db/external</span>
+          </div>
+          <div class="graph-wrap" id="graph">
+            <svg id="edges" viewBox="0 0 960 860" preserveAspectRatio="none">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(143, 211, 255, 0.8)"></path>
+            </marker>
+          </defs>
+        </svg>
+            <div id="nodes"><button class="node dim" data-id="app-shell" style="left: 110px; top: 110px; display: none; --dot: #8fd3ff;">
+            <span class="category">route</span>
+            <strong>App shell &amp; routing</strong>
+            <small>Root layout, proxy gate, login/signup, and route loading states.</small>
+            <div class="meta">
+              <span>0 in</span>
+              <span>5 out</span>
+            </div>
+          </button><button class="node dim" data-id="auth-actions" style="left: 110px; top: 270px; display: none; --dot: #81e6c6;">
+            <span class="category">action</span>
+            <strong>Auth actions</strong>
+            <small>Server actions that sign users in/out and create sessions.</small>
+            <div class="meta">
+              <span>2 in</span>
+              <span>1 out</span>
+            </div>
+          </button><button class="node dim" data-id="dashboard" style="left: 110px; top: 430px; display: none; --dot: #a5b4fc;">
+            <span class="category">page</span>
+            <strong>Dashboard</strong>
+            <small>Lists meters, the latest reading, bill counts, and the add-meter form.</small>
+            <div class="meta">
+              <span>1 in</span>
+              <span>3 out</span>
+            </div>
+          </button><button class="node dim" data-id="meter-actions" style="left: 110px; top: 590px; display: none; --dot: #81e6c6;">
+            <span class="category">action</span>
+            <strong>Meter actions</strong>
+            <small>Insert/delete meter rows with owner checks and cache revalidation.</small>
+            <div class="meta">
+              <span>2 in</span>
+              <span>1 out</span>
+            </div>
+          </button><button class="node dim" data-id="ui-components" style="left: 110px; top: 750px; display: none; --dot: #f4c67a;">
+            <span class="category">component</span>
+            <strong>UI components</strong>
+            <small>Shared header, modal, camera, preview, breakdown, outlook, and delete controls.</small>
+            <div class="meta">
+              <span>5 in</span>
+              <span>3 out</span>
+            </div>
+          </button><button class="node dim" data-id="meter-detail" style="left: 340px; top: 140px; display: none; --dot: #a5b4fc;">
+            <span class="category">page</span>
+            <strong>Meter detail</strong>
+            <small>Shows readings, bills, and the month outlook for one meter.</small>
+            <div class="meta">
+              <span>1 in</span>
+              <span>6 out</span>
+            </div>
+          </button><button class="node dim" data-id="new-reading-flow" style="left: 340px; top: 300px; display: none; --dot: #a5b4fc;">
+            <span class="category">page</span>
+            <strong>New reading flow</strong>
+            <small>Captures a manual or photo reading, previews the bill, and submits the reading.</small>
+            <div class="meta">
+              <span>2 in</span>
+              <span>6 out</span>
+            </div>
+          </button><button class="node dim" data-id="reading-actions" style="left: 340px; top: 460px; display: none; --dot: #81e6c6;">
+            <span class="category">action</span>
+            <strong>Reading actions</strong>
+            <small>Validates readings, persists them, and creates a bill from the previous reading.</small>
+            <div class="meta">
+              <span>1 in</span>
+              <span>2 out</span>
+            </div>
+          </button><button class="node dim" data-id="bill-detail-pdf" style="left: 340px; top: 620px; display: none; --dot: #a5b4fc;">
+            <span class="category">page</span>
+            <strong>Bill detail &amp; PDF</strong>
+            <small>Rebuilds totals from stored blocks and exports the invoice as PDF.</small>
+            <div class="meta">
+              <span>2 in</span>
+              <span>4 out</span>
+            </div>
+          </button><button class="node dim" data-id="settings-ai-key" style="left: 340px; top: 780px; display: none; --dot: #81e6c6;">
+            <span class="category">action</span>
+            <strong>Settings / AI key</strong>
+            <small>Validates and stores the user's encrypted AI API key.</small>
+            <div class="meta">
+              <span>1 in</span>
+              <span>4 out</span>
+            </div>
+          </button><button class="node dim" data-id="api-routes" style="left: 570px; top: 140px; display: none; --dot: #8fd3ff;">
+            <span class="category">route</span>
+            <strong>API routes</strong>
+            <small>Tariff lookup and AI extraction endpoints.</small>
+            <div class="meta">
+              <span>1 in</span>
+              <span>2 out</span>
+            </div>
+          </button><button class="node dim" data-id="data-access" style="left: 570px; top: 300px; display: none; --dot: #9ee0ff;">
+            <span class="category">infra</span>
+            <strong>Data access &amp; Supabase</strong>
+            <small>Central Supabase helper layer with encrypted user key access and tariff fallback.</small>
+            <div class="meta">
+              <span>9 in</span>
+              <span>2 out</span>
+            </div>
+          </button><button class="node dim" data-id="tariff-engine" style="left: 570px; top: 460px; display: none; --dot: #f4c67a;">
+            <span class="category">lib</span>
+            <strong>Tariff engine</strong>
+            <small>REERS block billing math, partial-period handling, and block summaries.</small>
+            <div class="meta">
+              <span>4 in</span>
+              <span>0 out</span>
+            </div>
+          </button><button class="node dim" data-id="outlook-engine" style="left: 570px; top: 620px; display: none; --dot: #f4c67a;">
+            <span class="category">lib</span>
+            <strong>Outlook engine</strong>
+            <small>Projected month-end consumption and bill estimate from recent readings.</small>
+            <div class="meta">
+              <span>1 in</span>
+              <span>1 out</span>
+            </div>
+          </button><button class="node dim" data-id="formatting-helpers" style="left: 570px; top: 780px; display: none; --dot: #f4c67a;">
+            <span class="category">lib</span>
+            <strong>Formatting helpers</strong>
+            <small>Small reading display helper used by the meter views.</small>
+            <div class="meta">
+              <span>2 in</span>
+              <span>0 out</span>
+            </div>
+          </button><button class="node dim" data-id="crypto" style="left: 800px; top: 140px; display: none; --dot: #f4c67a;">
+            <span class="category">lib</span>
+            <strong>Crypto</strong>
+            <small>AES-256-GCM wrapper around small secrets with versioned storage format.</small>
+            <div class="meta">
+              <span>2 in</span>
+              <span>1 out</span>
+            </div>
+          </button><button class="node dim" data-id="vision-providers" style="left: 800px; top: 300px; display: none; --dot: #f4c67a;">
+            <span class="category">lib</span>
+            <strong>Vision providers</strong>
+            <small>Shared prompt plus Google/OpenAI/Anthropic extraction adapters.</small>
+            <div class="meta">
+              <span>2 in</span>
+              <span>1 out</span>
+            </div>
+          </button><button class="node active" data-id="database-schema" style="left: 800px; top: 460px; display: block; --dot: #f78f9c;">
+            <span class="category">db</span>
+            <strong>Database schema / RLS</strong>
+            <small>Supabase tables, seed tariff row, and row-level security policies.</small>
+            <div class="meta">
+              <span>0 in</span>
+              <span>1 out</span>
+            </div>
+          </button><button class="node dim" data-id="external-dependencies" style="left: 800px; top: 620px; display: none; --dot: #d6a0ff;">
+            <span class="category">external</span>
+            <strong>External dependencies</strong>
+            <small>Next.js App Router/runtime, Supabase, AI providers, jsPDF, browser APIs, and bundled font assets.</small>
+            <div class="meta">
+              <span>5 in</span>
+              <span>0 out</span>
+            </div>
+          </button></div>
+          </div>
+        </div>
+
+        <aside class="details" id="details">
+          <div class="badge">db</div>
+          <h2 style="margin-top: 12px;">Database schema / RLS</h2>
+          <p class="muted" style="margin-top: 10px; margin-bottom: 0;">Supabase tables, seed tariff row, and row-level security policies.</p>
+          <p class="muted" style="margin-top: 12px; margin-bottom: 0;">The SQL migrations are the source of truth for meters, readings, bills, tariff rates, and user settings.</p>
+
+          <section class="detail-block">
+            <h3>Source evidence</h3>
+            <div class="paths">
+              <span class="path-chip" title="Core schema, seed tariff row, and RLS">supabase/migrations/0001_initial.sql</span><span class="path-chip" title="Per-user settings table and RLS">supabase/migrations/0002_user_settings.sql</span>
+            </div>
+          </section>
+
+          <section class="detail-block">
+            <h3>Related tests</h3>
+            <div class="muted">No dedicated test file in this repo snapshot.</div>
+          </section>
+
+          
+            <section class="detail-block">
+              <h3>Upstream callers</h3>
+              <div class="muted">No inbound module edges recorded.</div>
+            </section>
+          
+
+          
+          <section class="detail-block">
+            <h3>Dependencies</h3>
+            <ul>
+              
+                    <li>
+                      External dependencies
+                      <span>service · Supabase Postgres and RLS</span>
+                    </li>
+                  
+            </ul>
+          </section>
+        
+
+          <section class="detail-block">
+            <h3>Downstream impact</h3>
+            <div class="muted">No downstream impact recorded.</div>
+          </section>
+
+          <section class="detail-block">
+            <h3>Related flows</h3>
+            <div class="paths">
+              <button class="path-chip" type="button" data-flow="meter-management">Create or delete a meter</button><button class="path-chip" type="button" data-flow="reading-and-bill">Record a reading and create a bill</button>
+            </div>
+          </section>
+        </aside>
+      </section>
+
+      <section class="flows">
+        <h2>Key flows</h2>
+        <div class="flow-grid" id="flows"><button type="button" class="flow-card">
+            <strong>Sign in and gate the app</strong>
+            <p>Anonymous users are pushed to /login by the proxy; successful auth writes Supabase session state and revalidates the shell.</p>
+            <p style="margin-top: 10px; color: var(--subtle); font-size: 11px;">App shell &amp; routing → Auth actions → Data access &amp; Supabase → External dependencies</p>
+          </button><button type="button" class="flow-card">
+            <strong>Create or delete a meter</strong>
+            <p>The dashboard form posts to the meter action, which inserts or deletes the row and then sends the user back home.</p>
+            <p style="margin-top: 10px; color: var(--subtle); font-size: 11px;">Dashboard → Meter actions → Data access &amp; Supabase → Database schema / RLS</p>
+          </button><button type="button" class="flow-card">
+            <strong>Record a reading and create a bill</strong>
+            <p>Manual entry or photo extraction both land in the same submission path; the photo branch can pause for an AI key and then uses the vision API before the server action writes the reading and bill.</p>
+            <p style="margin-top: 10px; color: var(--subtle); font-size: 11px;">New reading flow → API routes → Vision providers → Reading actions → Tariff engine → Data access &amp; Supabase → Database schema / RLS</p>
+          </button><button type="button" class="flow-card">
+            <strong>Review a meter and its month outlook</strong>
+            <p>The meter detail page merges raw readings, stored bills, and the outlook engine so the user can see current usage and future estimate in one place.</p>
+            <p style="margin-top: 10px; color: var(--subtle); font-size: 11px;">Dashboard → Meter detail → Data access &amp; Supabase → Outlook engine → Tariff engine → Formatting helpers → UI components</p>
+          </button><button type="button" class="flow-card">
+            <strong>Open a bill and export the PDF</strong>
+            <p>The bill page recomputes totals from the stored block breakdown, then hands the same numbers to the PDF generator and bundled fonts.</p>
+            <p style="margin-top: 10px; color: var(--subtle); font-size: 11px;">Meter detail → Bill detail &amp; PDF → Tariff engine → UI components → External dependencies</p>
+          </button></div>
+      </section>
+    </div>
+
+    <script id="codemap-data" type="application/json">
+{
+  "project": "Users-noniboy-ers-calculator",
+  "generatedAt": "2026-08-24T00:00:00+02:00",
+  "sourceRoot": "/Users/noniboy/ers-calculator",
+  "graph": {
+    "primaryNodes": 19,
+    "flowCount": 5
+  },
+  "nodes": [
+    {
+      "id": "app-shell",
+      "label": "App shell & routing",
+      "category": "route",
+      "x": 110,
+      "y": 110,
+      "summary": "Root layout, proxy gate, login/signup, and route loading states.",
+      "notes": "Owns the route shell and the auth gate before any private page renders.",
+      "files": [
+        { "path": "src/app/layout.tsx", "note": "Global layout and metadata" },
+        { "path": "src/app/loading.tsx", "note": "Dashboard loading state" },
+        { "path": "src/app/login/page.tsx", "note": "Login page" },
+        { "path": "src/app/signup/page.tsx", "note": "Signup page" },
+        { "path": "src/app/meters/[id]/loading.tsx", "note": "Meter detail loading state" },
+        { "path": "src/app/meters/[id]/bills/[billId]/loading.tsx", "note": "Bill detail loading state" },
+        { "path": "src/app/meters/[id]/readings/new/loading.tsx", "note": "New reading loading state" },
+        { "path": "src/proxy.ts", "note": "Edge auth redirect and cookie refresh" }
+      ],
+      "tests": []
+    },
+    {
+      "id": "auth-actions",
+      "label": "Auth actions",
+      "category": "action",
+      "x": 110,
+      "y": 270,
+      "summary": "Server actions that sign users in/out and create sessions.",
+      "notes": "Redirects auth errors back to the login/signup pages and revalidates the app shell on success.",
+      "files": [
+        { "path": "src/app/actions/auth.ts", "note": "signInAction, signUpAction, signOutAction" }
+      ],
+      "tests": []
+    },
+    {
+      "id": "dashboard",
+      "label": "Dashboard",
+      "category": "page",
+      "x": 110,
+      "y": 430,
+      "summary": "Lists meters, the latest reading, bill counts, and the add-meter form.",
+      "notes": "The home route fans out to meter detail pages and meter creation.",
+      "files": [
+        { "path": "src/app/page.tsx", "note": "Dashboard page and add-meter form" }
+      ],
+      "tests": []
+    },
+    {
+      "id": "meter-actions",
+      "label": "Meter actions",
+      "category": "action",
+      "x": 110,
+      "y": 590,
+      "summary": "Insert/delete meter rows with owner checks and cache revalidation.",
+      "notes": "Both actions go through the shared Supabase helper layer and then redirect back to the dashboard.",
+      "files": [
+        { "path": "src/app/actions/meters.ts", "note": "createMeterAction and deleteMeterAction" }
+      ],
+      "tests": []
+    },
+    {
+      "id": "ui-components",
+      "label": "UI components",
+      "category": "component",
+      "x": 110,
+      "y": 750,
+      "summary": "Shared header, modal, camera, preview, breakdown, outlook, and delete controls.",
+      "notes": "These are the small client/server components that the route pages assemble into the app UI.",
+      "files": [
+        { "path": "src/components/Header.tsx", "note": "App header and sign-out button" },
+        { "path": "src/components/HeaderSettings.tsx", "note": "Opens the AI key modal" },
+        { "path": "src/components/ApiKeyModal.tsx", "note": "Collects and saves the AI key" },
+        { "path": "src/components/DeleteMeterButton.tsx", "note": "Deletes a meter with confirmation" },
+        { "path": "src/components/CameraCapture.tsx", "note": "Photo upload and preview" },
+        { "path": "src/components/ExtractedPreview.tsx", "note": "AI reading edit panel" },
+        { "path": "src/components/BillBreakdown.tsx", "note": "Bill line-item breakdown" },
+        { "path": "src/components/MonthOutlookCard.tsx", "note": "Projected month summary" }
+      ],
+      "tests": []
+    },
+    {
+      "id": "meter-detail",
+      "label": "Meter detail",
+      "category": "page",
+      "x": 340,
+      "y": 140,
+      "summary": "Shows readings, bills, and the month outlook for one meter.",
+      "notes": "This page is the main read-only view for a meter and links into new reading entry and bill history.",
+      "files": [
+        { "path": "src/app/meters/[id]/page.tsx", "note": "Meter detail page" }
+      ],
+      "tests": []
+    },
+    {
+      "id": "new-reading-flow",
+      "label": "New reading flow",
+      "category": "page",
+      "x": 340,
+      "y": 300,
+      "summary": "Captures a manual or photo reading, previews the bill, and submits the reading.",
+      "notes": "The photo branch can pause for an AI key, extract a reading, and then hand off to the same submission path as manual entry.",
+      "files": [
+        { "path": "src/app/meters/[id]/readings/new/page.tsx", "note": "New reading page" },
+        { "path": "src/app/meters/[id]/readings/new/ReadingFormClient.tsx", "note": "Client-side reading form and extraction flow" }
+      ],
+      "tests": []
+    },
+    {
+      "id": "reading-actions",
+      "label": "Reading actions",
+      "category": "action",
+      "x": 340,
+      "y": 460,
+      "summary": "Validates readings, persists them, and creates a bill from the previous reading.",
+      "notes": "If there is a previous reading, this action computes the delta and stores a bill record in the same request.",
+      "files": [
+        { "path": "src/app/actions/readings.ts", "note": "createReadingAction" }
+      ],
+      "tests": []
+    },
+    {
+      "id": "bill-detail-pdf",
+      "label": "Bill detail & PDF",
+      "category": "page",
+      "x": 340,
+      "y": 620,
+      "summary": "Rebuilds totals from stored blocks and exports the invoice as PDF.",
+      "notes": "This is the read-only bill view and the PDF download path in one place.",
+      "files": [
+        { "path": "src/app/meters/[id]/bills/[billId]/page.tsx", "note": "Bill detail page" },
+        { "path": "src/components/PdfDownload.tsx", "note": "Client-side PDF export" }
+      ],
+      "tests": []
+    },
+    {
+      "id": "settings-ai-key",
+      "label": "Settings / AI key",
+      "category": "action",
+      "x": 340,
+      "y": 780,
+      "summary": "Validates and stores the user's encrypted AI API key.",
+      "notes": "The modal validates the key against Gemini before saving, but still tolerates temporary network problems.",
+      "files": [
+        { "path": "src/app/actions/settings.ts", "note": "saveAiApiKeyAction" }
+      ],
+      "tests": []
+    },
+    {
+      "id": "api-routes",
+      "label": "API routes",
+      "category": "route",
+      "x": 570,
+      "y": 140,
+      "summary": "Tariff lookup and AI extraction endpoints.",
+      "notes": "These routes are the HTTP boundary for tariff data and image-based meter extraction.",
+      "files": [
+        { "path": "src/app/api/tariffs/route.ts", "note": "GET /api/tariffs" },
+        { "path": "src/app/api/vision/extract/route.ts", "note": "POST /api/vision/extract" }
+      ],
+      "tests": []
+    },
+    {
+      "id": "data-access",
+      "label": "Data access & Supabase",
+      "category": "infra",
+      "x": 570,
+      "y": 300,
+      "summary": "Central Supabase helper layer with encrypted user key access and tariff fallback.",
+      "notes": "This is the high-fan-in layer that almost every server action and page uses for reads and writes.",
+      "files": [
+        { "path": "src/lib/db.ts", "note": "CRUD and auth helpers" },
+        { "path": "src/lib/supabase/client.ts", "note": "Browser client" },
+        { "path": "src/lib/supabase/server.ts", "note": "Server/client helper for actions and routes" }
+      ],
+      "tests": []
+    },
+    {
+      "id": "tariff-engine",
+      "label": "Tariff engine",
+      "category": "lib",
+      "x": 570,
+      "y": 460,
+      "summary": "REERS block billing math, partial-period handling, and block summaries.",
+      "notes": "This is the core billing engine; calculateBill is the hotspot most other flows lean on.",
+      "files": [
+        { "path": "src/lib/tariff.ts", "note": "Rates, block splitting, bill calculation, summaries" }
+      ],
+      "tests": [
+        { "path": "src/lib/tariff.test.ts", "note": "Block split math, June 2026 invoice, VAT, ratio behavior" }
+      ]
+    },
+    {
+      "id": "outlook-engine",
+      "label": "Outlook engine",
+      "category": "lib",
+      "x": 570,
+      "y": 620,
+      "summary": "Projected month-end consumption and bill estimate from recent readings.",
+      "notes": "The dashboard outlook is read-only and reuses tariff math without touching the bills table.",
+      "files": [
+        { "path": "src/lib/outlook.ts", "note": "Current month, run rate, and projected bill" }
+      ],
+      "tests": []
+    },
+    {
+      "id": "formatting-helpers",
+      "label": "Formatting helpers",
+      "category": "lib",
+      "x": 570,
+      "y": 780,
+      "summary": "Small reading display helper used by the meter views.",
+      "notes": "A tiny utility, but it is still part of the user-visible read path and has a dedicated unit test.",
+      "files": [
+        { "path": "src/lib/format.ts", "note": "formatReading helper" }
+      ],
+      "tests": [
+        { "path": "src/lib/format.test.ts", "note": "Formatting of VT/MT pairs, nulls, zeros, decimals" }
+      ]
+    },
+    {
+      "id": "crypto",
+      "label": "Crypto",
+      "category": "lib",
+      "x": 800,
+      "y": 140,
+      "summary": "AES-256-GCM wrapper around small secrets with versioned storage format.",
+      "notes": "Protects the stored AI API key against raw DB access and backup leaks.",
+      "files": [
+        { "path": "src/lib/crypto.ts", "note": "encryptSecret and decryptSecret" }
+      ],
+      "tests": [
+        { "path": "src/lib/crypto.test.ts", "note": "Round-trip encryption, malformed input, backward compatibility" }
+      ]
+    },
+    {
+      "id": "vision-providers",
+      "label": "Vision providers",
+      "category": "lib",
+      "x": 800,
+      "y": 300,
+      "summary": "Shared prompt plus Google/OpenAI/Anthropic extraction adapters.",
+      "notes": "All three adapters normalize image-to-reading extraction into the same tiny result shape.",
+      "files": [
+        { "path": "src/lib/vision/provider.ts", "note": "Provider factory" },
+        { "path": "src/lib/vision/types.ts", "note": "Prompt, config, and result types" },
+        { "path": "src/lib/vision/google.ts", "note": "Gemini adapter" },
+        { "path": "src/lib/vision/openai.ts", "note": "OpenAI adapter" },
+        { "path": "src/lib/vision/anthropic.ts", "note": "Anthropic adapter" }
+      ],
+      "tests": []
+    },
+    {
+      "id": "database-schema",
+      "label": "Database schema / RLS",
+      "category": "db",
+      "x": 800,
+      "y": 460,
+      "summary": "Supabase tables, seed tariff row, and row-level security policies.",
+      "notes": "The SQL migrations are the source of truth for meters, readings, bills, tariff rates, and user settings.",
+      "files": [
+        { "path": "supabase/migrations/0001_initial.sql", "note": "Core schema, seed tariff row, and RLS" },
+        { "path": "supabase/migrations/0002_user_settings.sql", "note": "Per-user settings table and RLS" }
+      ],
+      "tests": []
+    },
+    {
+      "id": "external-dependencies",
+      "label": "External dependencies",
+      "category": "external",
+      "x": 800,
+      "y": 620,
+      "summary": "Next.js App Router/runtime, Supabase, AI providers, jsPDF, browser APIs, and bundled font assets.",
+      "notes": "This node collects the non-local services and packages the app leans on at runtime.",
+      "files": [
+        { "path": "package.json", "note": "Next.js, React, Supabase, jsPDF, Vitest, and build scripts" },
+        { "path": "public/fonts/GreatVibes-Regular.ttf", "note": "PDF title font" },
+        { "path": "public/fonts/PT_Sans-Web-Regular.ttf", "note": "PDF body font" },
+        { "path": "public/fonts/PT_Sans-Web-Bold.ttf", "note": "PDF bold body font" }
+      ],
+      "tests": []
+    }
+  ],
+  "edges": [
+    { "from": "app-shell", "to": "auth-actions", "kind": "route", "label": "login / signup / sign out" },
+    { "from": "app-shell", "to": "dashboard", "kind": "route", "label": "home route" },
+    { "from": "app-shell", "to": "meter-detail", "kind": "route", "label": "private meter pages" },
+    { "from": "app-shell", "to": "new-reading-flow", "kind": "route", "label": "new reading route" },
+    { "from": "app-shell", "to": "bill-detail-pdf", "kind": "route", "label": "bill route" },
+    { "from": "auth-actions", "to": "data-access", "kind": "data", "label": "Supabase auth session" },
+    { "from": "dashboard", "to": "meter-actions", "kind": "call", "label": "create meter form" },
+    { "from": "dashboard", "to": "data-access", "kind": "data", "label": "meters, latest readings, bill counts" },
+    { "from": "dashboard", "to": "ui-components", "kind": "render", "label": "Header and shared UI" },
+    { "from": "meter-actions", "to": "data-access", "kind": "data", "label": "owner checks and meter writes" },
+    { "from": "meter-detail", "to": "data-access", "kind": "data", "label": "meter, readings, bills, tariff rates" },
+    { "from": "meter-detail", "to": "outlook-engine", "kind": "call", "label": "month outlook" },
+    { "from": "meter-detail", "to": "formatting-helpers", "kind": "call", "label": "reading labels" },
+    { "from": "meter-detail", "to": "ui-components", "kind": "render", "label": "Header, outlook card, delete button" },
+    { "from": "meter-detail", "to": "new-reading-flow", "kind": "route", "label": "new reading link" },
+    { "from": "meter-detail", "to": "bill-detail-pdf", "kind": "route", "label": "bill detail link" },
+    { "from": "new-reading-flow", "to": "reading-actions", "kind": "call", "label": "submit reading" },
+    { "from": "new-reading-flow", "to": "api-routes", "kind": "route", "label": "photo extraction" },
+    { "from": "new-reading-flow", "to": "data-access", "kind": "data", "label": "meter, latest reading, tariff rates" },
+    { "from": "new-reading-flow", "to": "tariff-engine", "kind": "call", "label": "live bill preview" },
+    { "from": "new-reading-flow", "to": "formatting-helpers", "kind": "call", "label": "previous reading display" },
+    { "from": "new-reading-flow", "to": "ui-components", "kind": "render", "label": "camera, preview, breakdown, modal" },
+    { "from": "reading-actions", "to": "data-access", "kind": "data", "label": "fetch meter/latest reading/rates and insert rows" },
+    { "from": "reading-actions", "to": "tariff-engine", "kind": "call", "label": "bill creation" },
+    { "from": "bill-detail-pdf", "to": "data-access", "kind": "data", "label": "bill, meter, tariff rates" },
+    { "from": "bill-detail-pdf", "to": "tariff-engine", "kind": "call", "label": "summarize blocks and recompute totals" },
+    { "from": "bill-detail-pdf", "to": "ui-components", "kind": "render", "label": "breakdown and download button" },
+    { "from": "bill-detail-pdf", "to": "external-dependencies", "kind": "service", "label": "jsPDF and bundled fonts" },
+    { "from": "settings-ai-key", "to": "vision-providers", "kind": "call", "label": "validate Gemini key" },
+    { "from": "settings-ai-key", "to": "data-access", "kind": "data", "label": "auth user and encrypted settings row" },
+    { "from": "settings-ai-key", "to": "crypto", "kind": "data", "label": "encrypt saved key" },
+    { "from": "settings-ai-key", "to": "ui-components", "kind": "render", "label": "header settings and modal" },
+    { "from": "api-routes", "to": "data-access", "kind": "data", "label": "auth user, tariff row, stored API key" },
+    { "from": "api-routes", "to": "vision-providers", "kind": "service", "label": "AI extraction" },
+    { "from": "data-access", "to": "crypto", "kind": "data", "label": "encrypt/decrypt AI key" },
+    { "from": "data-access", "to": "external-dependencies", "kind": "service", "label": "Supabase browser/server clients" },
+    { "from": "outlook-engine", "to": "tariff-engine", "kind": "call", "label": "projected bill" },
+    { "from": "crypto", "to": "external-dependencies", "kind": "service", "label": "Node crypto" },
+    { "from": "vision-providers", "to": "external-dependencies", "kind": "service", "label": "Gemini / OpenAI / Anthropic HTTP APIs" },
+    { "from": "database-schema", "to": "external-dependencies", "kind": "service", "label": "Supabase Postgres and RLS" },
+    { "from": "ui-components", "to": "auth-actions", "kind": "call", "label": "Header sign-out button" },
+    { "from": "ui-components", "to": "meter-actions", "kind": "call", "label": "DeleteMeterButton" },
+    { "from": "ui-components", "to": "settings-ai-key", "kind": "call", "label": "HeaderSettings and ApiKeyModal" }
+  ],
+  "flows": [
+    {
+      "id": "auth-session",
+      "title": "Sign in and gate the app",
+      "summary": "Anonymous users are pushed to /login by the proxy; successful auth writes Supabase session state and revalidates the shell.",
+      "steps": ["app-shell", "auth-actions", "data-access", "external-dependencies"],
+      "notes": "This path is the outermost guardrail for the whole app."
+    },
+    {
+      "id": "meter-management",
+      "title": "Create or delete a meter",
+      "summary": "The dashboard form posts to the meter action, which inserts or deletes the row and then sends the user back home.",
+      "steps": ["dashboard", "meter-actions", "data-access", "database-schema"],
+      "notes": "This is the simplest write flow in the app."
+    },
+    {
+      "id": "reading-and-bill",
+      "title": "Record a reading and create a bill",
+      "summary": "Manual entry or photo extraction both land in the same submission path; the photo branch can pause for an AI key and then uses the vision API before the server action writes the reading and bill.",
+      "steps": ["new-reading-flow", "api-routes", "vision-providers", "reading-actions", "tariff-engine", "data-access", "database-schema"],
+      "notes": "The photo branch routes through /api/vision/extract; the manual branch skips straight to createReadingAction."
+    },
+    {
+      "id": "meter-outlook",
+      "title": "Review a meter and its month outlook",
+      "summary": "The meter detail page merges raw readings, stored bills, and the outlook engine so the user can see current usage and future estimate in one place.",
+      "steps": ["dashboard", "meter-detail", "data-access", "outlook-engine", "tariff-engine", "formatting-helpers", "ui-components"],
+      "notes": "This is the read-only snapshot most users land on after saving a reading."
+    },
+    {
+      "id": "bill-export",
+      "title": "Open a bill and export the PDF",
+      "summary": "The bill page recomputes totals from the stored block breakdown, then hands the same numbers to the PDF generator and bundled fonts.",
+      "steps": ["meter-detail", "bill-detail-pdf", "tariff-engine", "ui-components", "external-dependencies"],
+      "notes": "This keeps the PDF in sync with the on-screen breakdown."
+    }
+  ]
+}
+    </script>
+
+    <script>
+      const DATA = JSON.parse(document.getElementById("codemap-data").textContent);
+      const nodesById = new Map(DATA.nodes.map((node) => [node.id, node]));
+      const incoming = new Map(DATA.nodes.map((node) => [node.id, []]));
+      const outgoing = new Map(DATA.nodes.map((node) => [node.id, []]));
+
+      for (const edge of DATA.edges) {
+        outgoing.get(edge.from).push(edge);
+        incoming.get(edge.to).push(edge);
+      }
+
+      const palette = {
+        route: "#8fd3ff",
+        page: "#a5b4fc",
+        action: "#81e6c6",
+        component: "#f4c67a",
+        infra: "#9ee0ff",
+        lib: "#f4c67a",
+        db: "#f78f9c",
+        external: "#d6a0ff",
+      };
+
+      const edgePalette = {
+        route: "rgba(143, 211, 255, 0.65)",
+        call: "rgba(244, 198, 122, 0.7)",
+        data: "rgba(129, 230, 198, 0.65)",
+        render: "rgba(159, 177, 255, 0.62)",
+        service: "rgba(247, 143, 156, 0.68)",
+      };
+
+      const searchInput = document.getElementById("search");
+      const nodesLayer = document.getElementById("nodes");
+      const edgesLayer = document.getElementById("edges");
+      const details = document.getElementById("details");
+      const flowsLayer = document.getElementById("flows");
+      const categoryButtons = [...document.querySelectorAll(".chip[data-category]")];
+
+      let selectedNodeId = "dashboard";
+      let selectedFlowId = null;
+      let activeCategory = "all";
+      let searchTerm = "";
+
+      function matchesSearch(node) {
+        if (!searchTerm) return true;
+        const haystack = [
+          node.label,
+          node.summary,
+          node.notes,
+          ...(node.files || []).map((file) => `${file.path} ${file.note}`),
+          ...(node.tests || []).map((test) => `${test.path} ${test.note}`),
+        ]
+          .join(" ")
+          .toLowerCase();
+        return haystack.includes(searchTerm);
+      }
+
+      function categoryVisible(node) {
+        return activeCategory === "all" || node.category === activeCategory;
+      }
+
+      function activeNodes() {
+        if (selectedFlowId) {
+          const flow = DATA.flows.find((item) => item.id === selectedFlowId);
+          return new Set(flow ? flow.steps : [selectedNodeId]);
+        }
+        return new Set([selectedNodeId]);
+      }
+
+      function classifyEdge(edge) {
+        return edge.kind === "route" ? "route" : edge.kind;
+      }
+
+      function setSelectedNode(id) {
+        if (!nodesById.has(id)) return;
+        selectedNodeId = id;
+        selectedFlowId = null;
+        render();
+      }
+
+      function setSelectedFlow(id) {
+        selectedFlowId = id;
+        const flow = DATA.flows.find((item) => item.id === id);
+        if (flow?.steps?.length) selectedNodeId = flow.steps[0];
+        render();
+      }
+
+      function renderEdges(visibleIds, activeSet) {
+        const visibleEdges = DATA.edges.filter((edge) => visibleIds.has(edge.from) && visibleIds.has(edge.to));
+        edgesLayer.innerHTML = `
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(143, 211, 255, 0.8)"></path>
+            </marker>
+          </defs>
+        `;
+
+        for (const edge of visibleEdges) {
+          const from = nodesById.get(edge.from);
+          const to = nodesById.get(edge.to);
+          const dx = to.x - from.x;
+          const curve = Math.max(Math.abs(dx) * 0.45, 90);
+          const sweep = dx > 0 ? 1 : 0;
+          const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          path.setAttribute(
+            "d",
+            `M ${from.x} ${from.y} C ${from.x + curve} ${from.y}, ${to.x - curve} ${to.y}, ${to.x} ${to.y}`,
+          );
+          path.setAttribute("marker-end", "url(#arrow)");
+          path.classList.add("edge");
+          path.dataset.from = edge.from;
+          path.dataset.to = edge.to;
+          path.style.stroke = edgePalette[edge.kind] || "rgba(143, 211, 255, 0.65)";
+          const active = selectedFlowId
+            ? activeSet.has(edge.from) && activeSet.has(edge.to)
+            : activeSet.has(edge.from) || activeSet.has(edge.to);
+          if (!active) path.classList.add("dim");
+          if (active) path.classList.add("active");
+          edgesLayer.appendChild(path);
+        }
+      }
+
+      function renderNodes(visibleIds, activeSet) {
+        nodesLayer.innerHTML = "";
+        for (const node of DATA.nodes) {
+          const visible = visibleIds.has(node.id);
+          const button = document.createElement("button");
+          button.className = "node";
+          if (!visible) button.classList.add("dim");
+          if (node.id === selectedNodeId) button.classList.add("active");
+          if (selectedFlowId && activeSet.has(node.id)) button.classList.add("active");
+          button.style.left = `${node.x}px`;
+          button.style.top = `${node.y}px`;
+          button.style.display = visible ? "block" : "none";
+          button.style.setProperty("--dot", palette[node.category] || "var(--accent)");
+          button.dataset.id = node.id;
+          button.innerHTML = `
+            <span class="category">${node.category}</span>
+            <strong>${node.label}</strong>
+            <small>${node.summary}</small>
+            <div class="meta">
+              <span>${(incoming.get(node.id) || []).length} in</span>
+              <span>${(outgoing.get(node.id) || []).length} out</span>
+            </div>
+          `;
+          button.addEventListener("click", () => setSelectedNode(node.id));
+          nodesLayer.appendChild(button);
+        }
+      }
+
+      function relationList(title, rows, emptyText) {
+        const safeRows = rows.filter(Boolean);
+        if (!safeRows.length) {
+          return `
+            <section class="detail-block">
+              <h3>${title}</h3>
+              <div class="muted">${emptyText}</div>
+            </section>
+          `;
+        }
+        return `
+          <section class="detail-block">
+            <h3>${title}</h3>
+            <ul>
+              ${safeRows
+                .map(
+                  (row) => `
+                    <li>
+                      ${row.title}
+                      <span>${row.note}</span>
+                    </li>
+                  `,
+                )
+                .join("")}
+            </ul>
+          </section>
+        `;
+      }
+
+      function collectDownstreamImpact(nodeId) {
+        const impact = [];
+        const visited = new Set([nodeId]);
+        const queue = (incoming.get(nodeId) || []).map((edge) => ({
+          nodeId: edge.from,
+          hop: 1,
+          via: edge,
+        }));
+
+        while (queue.length) {
+          const current = queue.shift();
+          if (!current || visited.has(current.nodeId)) continue;
+          visited.add(current.nodeId);
+
+          impact.push({
+            title: nodesById.get(current.nodeId).label,
+            note: `${current.hop} hop${current.hop === 1 ? "" : "s"} away · ${current.via.kind} · ${current.via.label}`,
+          });
+
+          if (current.hop >= 3) continue;
+
+          for (const edge of incoming.get(current.nodeId) || []) {
+            queue.push({
+              nodeId: edge.from,
+              hop: current.hop + 1,
+              via: edge,
+            });
+          }
+        }
+
+        return impact;
+      }
+
+      function renderDetails() {
+        const node = nodesById.get(selectedNodeId) || DATA.nodes[0];
+        const incomingEdges = (incoming.get(node.id) || []).map((edge) => ({
+          title: `${nodesById.get(edge.from).label}`,
+          note: `${edge.kind} · ${edge.label}`,
+        }));
+        const outgoingEdges = (outgoing.get(node.id) || []).map((edge) => ({
+          title: `${nodesById.get(edge.to).label}`,
+          note: `${edge.kind} · ${edge.label}`,
+        }));
+        const relatedFlows = DATA.flows.filter((flow) => flow.steps.includes(node.id));
+        const downstreamImpact = collectDownstreamImpact(node.id);
+
+        details.innerHTML = `
+          <div class="badge">${node.category}</div>
+          <h2 style="margin-top: 12px;">${node.label}</h2>
+          <p class="muted" style="margin-top: 10px; margin-bottom: 0;">${node.summary}</p>
+          <p class="muted" style="margin-top: 12px; margin-bottom: 0;">${node.notes}</p>
+
+          <section class="detail-block">
+            <h3>Source evidence</h3>
+            <div class="paths">
+              ${(node.files || [])
+                .map((file) => `<span class="path-chip" title="${file.note}">${file.path}</span>`)
+                .join("")}
+            </div>
+          </section>
+
+          <section class="detail-block">
+            <h3>Related tests</h3>
+            ${
+              node.tests && node.tests.length
+                ? `<ul>${node.tests
+                    .map((test) => `<li>${test.path}<span>${test.note}</span></li>`)
+                    .join("")}</ul>`
+                : `<div class="muted">No dedicated test file in this repo snapshot.</div>`
+            }
+          </section>
+
+          ${relationList(
+            "Upstream callers",
+            incomingEdges,
+            "No inbound module edges recorded.",
+          )}
+
+          ${relationList(
+            "Dependencies",
+            outgoingEdges.filter((row) => !row.note.startsWith("route")),
+            "No outbound module dependencies recorded.",
+          )}
+
+          <section class="detail-block">
+            <h3>Downstream impact</h3>
+            ${
+              downstreamImpact.length
+                ? `<ul>${downstreamImpact
+                    .map(
+                      (row) => `
+                        <li>
+                          ${row.title}
+                          <span>${row.note}</span>
+                        </li>
+                      `,
+                    )
+                    .join("")}</ul>`
+                : `<div class="muted">No downstream impact recorded.</div>`
+            }
+          </section>
+
+          <section class="detail-block">
+            <h3>Related flows</h3>
+            <div class="paths">
+              ${relatedFlows.length
+                ? relatedFlows
+                    .map(
+                      (flow) =>
+                        `<button class="path-chip" type="button" data-flow="${flow.id}">${flow.title}</button>`,
+                    )
+                    .join("")
+                : `<span class="muted">No flow membership recorded.</span>`}
+            </div>
+          </section>
+        `;
+
+        [...details.querySelectorAll("[data-flow]")].forEach((button) => {
+          button.addEventListener("click", () => setSelectedFlow(button.dataset.flow));
+        });
+      }
+
+      function renderFlows() {
+        flowsLayer.innerHTML = "";
+        for (const flow of DATA.flows) {
+          const card = document.createElement("button");
+          card.type = "button";
+          card.className = "flow-card";
+          if (flow.id === selectedFlowId) card.classList.add("active");
+          card.innerHTML = `
+            <strong>${flow.title}</strong>
+            <p>${flow.summary}</p>
+            <p style="margin-top: 10px; color: var(--subtle); font-size: 11px;">${flow.steps
+              .map((step) => nodesById.get(step).label)
+              .join(" → ")}</p>
+          `;
+          card.addEventListener("click", () => setSelectedFlow(flow.id));
+          flowsLayer.appendChild(card);
+        }
+      }
+
+      function render() {
+        const visibleIds = new Set(
+          DATA.nodes.filter((node) => categoryVisible(node) && matchesSearch(node)).map((node) => node.id),
+        );
+
+        if (!visibleIds.has(selectedNodeId)) {
+          selectedNodeId = [...visibleIds][0] || DATA.nodes[0].id;
+        }
+        const activeSet = activeNodes();
+        renderEdges(visibleIds, activeSet);
+        renderNodes(visibleIds, activeSet);
+        renderDetails();
+        renderFlows();
+      }
+
+      searchInput.addEventListener("input", (event) => {
+        searchTerm = event.target.value.trim().toLowerCase();
+        render();
+      });
+
+      categoryButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          activeCategory = button.dataset.category;
+          categoryButtons.forEach((chip) => chip.classList.toggle("active", chip === button));
+          render();
+        });
+      });
+
+      document.getElementById("nodeCount").textContent = String(DATA.nodes.length);
+      document.getElementById("flowCount").textContent = String(DATA.flows.length);
+      render();
+    </script>
+  
+
+</body></html>
