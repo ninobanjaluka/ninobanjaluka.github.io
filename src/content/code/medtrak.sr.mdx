@@ -1,0 +1,45 @@
+---
+title: "Medtrak: dosadile mi aplikacije pretrpane reklamama, pa sam napravio svoju"
+date: 2026-08-26
+excerpt: "Sve aplikacije za podsjećanje na lijekove su krenule putem reklama, pa sam za par sati napravio tihu, bezimenu alternativu: React + Vite web app, plus APK za Android preko Capacitor-a."
+section: "code"
+tags: ["react", "vite", "capacitor", "typescript", "side-project"]
+repo: "https://github.com/katnino/Medtrak"
+coverImage: "/images/medtrak-cover.png"
+---
+
+Koristim jednu aplikaciju za podsjećanje i praćenje uzimanja medikamenata, vitamina i sličnih stvari, jer sam zaboravan, jbg. Donedavno je bila besplatna i vrlo korisna. Onda su i oni počeli da zajebavaju sa reklamama, pa rekoh, dobro, instaliraću drugu.
+
+Samo, ispostavilo se da su se svi kao dogovorili oko tih reklama, kao da je u pitanju neki komplikovan softver na kojem se vrti gomila para. To je podsjetnik sa kalendarom. Ne nađoh nijednu normalnu.
+
+Pa umjesto da budem lijen, sjeo sam na par sati i napravio svoju. Deset puta bolju, ljepšu i kvalitetniju od bilo koje od njih.
+
+## Šta aplikacija radi
+
+Medtrak je tih, taman, niskokontrastni podsjetnik za lijekove i termine kod ljekara:
+
+- Lijekovi sa dozom, oblikom, jednim ili više podsjetnika dnevno, konkretnim danima u sedmici (ili svaki dan), datumom početka/kraja i napomenama
+- Prikaz "Danas" — kružni ciferblat koji raspoređuje dnevne doze po vremenu, plus jednostavna lista uzmi/preskoči
+- Termini kod ljekara sa klinikom, lokacijom, datumom, vremenom i napomenama, prikazani kao tačka na kalendaru i istaknuti na "Danas" kad termin pada tog dana
+- Kalendar u mjesečnom prikazu sa malim indikatorom pridržavanja terapiji za svaki dan
+- Alarm preko cijelog ekrana sa zvukom generisanim u pregledaču kad dođe vrijeme za dozu ili termin, plus native notifikacija ako si dozvolio/la pristup
+
+Nema praćenja, nepotrebnih sranja, strogi no name — nisam se čak ni potpisao.
+
+## Tehnologije
+
+- **Frontend**: React 19 + TypeScript, Vite za build, Tailwind v4 za stil, `lucide-react` za ikonice, `date-fns` za rad sa datumima
+- **Skladištenje**: sve živi u `localStorage`-u. Nema backend-a, baze podataka, ni naloga
+- **Native buildovi**: upakovano preko Capacitor-a za iOS i Android. `@capacitor/local-notifications` zakazuje podsjetnike direktno na uređaju, tako da native aplikaciji internet uopšte nije potreban — Android manifest čak i ne traži pristup mreži
+
+Radi kao obična statička web aplikacija, ono što postaviš na Vercel ili bilo koji sličan servis za par minuta, a ispekao sam i APK za Android.
+
+## Zašto bez backend-a
+
+Zato što mu ne treba. To su tvoji lijekovi i tvoj raspored, ne nešto što mora da se sinhronizuje po deset uređaja ili da se proda reklamašima. Kad je sve lokalno, nema naloga za pravljenje, nema podataka koji izlaze sa uređaja, i nema servera koji ja moram da održavam. Svi na dobitku, uglavnom ja, jer više ne moram da razmišljam o tome.
+
+## Trenutno stanje
+
+Radi, alarmi se pale, kalendar je tu, APK se builduje. Sve je na GitHub-u.
+
+[Repo](https://github.com/katnino/Medtrak)

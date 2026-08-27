@@ -1,0 +1,45 @@
+---
+title: "Medtrak: I got tired of ad-stuffed pill trackers, so I built my own"
+date: 2026-08-26
+excerpt: "Every medication reminder app went the ad-riddled route, so I built a quiet, no-name alternative in a few hours: React + Vite web app, plus a Capacitor-packaged Android APK."
+section: "code"
+tags: ["react", "vite", "capacitor", "typescript", "side-project"]
+repo: "https://github.com/katnino/Medtrak"
+coverImage: "/images/medtrak-cover.png"
+---
+
+I use an app to remind me to take my meds, vitamins, and whatever else, because I'm forgetful, what can I do. It used to be free and genuinely useful. Then it started shoving ads at me too. Fine, I'll switch.
+
+Except every alternative had made the same deal with the devil. Ads everywhere, like it's some enormously complex piece of software that justifies a pile of money changing hands. It's a reminder with a calendar attached. I couldn't find a single clean one.
+
+So instead of being lazy about it, I sat down for a few hours and built my own. Better looking, better built, and ten times less annoying than any of them.
+
+## What it does
+
+Medtrak is a quiet, dark, low-contrast medication and appointment tracker:
+
+- Medications with dosage, form, one or more reminder times a day, specific days of the week (or every day), start/end dates, and notes
+- A "Today" view — a circular dial laying out the day's doses by time, plus a simple take/skip list
+- Doctor appointments with clinic, location, date, time, and notes, shown as a dot on the calendar and surfaced on Today when one falls that day
+- A calendar month view with a small adherence indicator per day
+- Full-screen alarms with an in-browser generated chime when a dose or appointment is due, plus a native browser notification if you've granted permission
+
+No tracking, no accounts, no unnecessary crap. Strict no-name — I didn't even sign it.
+
+## Stack
+
+- **Frontend**: React 19 + TypeScript, Vite for the build, Tailwind v4 for styling, `lucide-react` for icons, `date-fns` for the date math
+- **Storage**: everything lives in `localStorage`. No backend, no database, no account
+- **Native builds**: wrapped with Capacitor for iOS and Android. `@capacitor/local-notifications` schedules reminders directly on the device, so the native app doesn't need the internet at all — the Android manifest doesn't even request network access
+
+It runs as a plain static web app, the kind of thing you drop on Vercel or any static host in a couple of minutes, and I also baked an APK out of it for Android.
+
+## Why no backend
+
+Because it doesn't need one. It's your meds and your schedule, not something that has to sync across ten devices or get sold to advertisers. Keeping it local means no account to create, no data leaving your device, and no server for me to maintain either. Everybody wins, mostly me, because I don't have to think about it again.
+
+## Where it's at
+
+It works, alarms fire, the calendar's there, the APK builds. Everything's on GitHub.
+
+[Repo](https://github.com/katnino/Medtrak)
