@@ -1,0 +1,16 @@
+{
+  "name": "Nino Katić — Photography, Code, Art & Life",
+  "short_name": "nino.dev",
+  "description": "Personal portfolio and blog showcasing photography, code projects, art, and life stories from Banja Luka.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080808",
+  "theme_color": "#fbbf24",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

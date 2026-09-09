@@ -1,5 +1,5 @@
 ---
-import "../styles/global.css";
+import "../content/photography/styles/global.css";
 import StructuredData from "../components/StructuredData.astro";
 
 interface Props {
@@ -84,7 +84,14 @@ const fullGraph = [...baseGraph, ...jsonLd];
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content={description} />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#fbbf24" />
+
+        <!-- Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Crimson+Pro:ital,wght@0,400;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" />
+
         <!-- Canonical Link -->
         <link rel="canonical" href={canonicalURL} />
         
