@@ -25,6 +25,7 @@ const srKey = Object.keys(srModules).find((k) => k.endsWith(`/${post.id}.sr.mdx`
 const srData = srKey ? srModules[srKey] : undefined;
 const SrContent = srData?.default;
 const srExcerpt = srData?.frontmatter?.excerpt;
+const srTitle = srData?.frontmatter?.title;
 ---
 
 <PostLayout
@@ -38,6 +39,7 @@ const srExcerpt = srData?.frontmatter?.excerpt;
     coverImage={post.data.coverImage}
     SrContent={SrContent}
     srExcerpt={srExcerpt}
+    srTitle={srTitle}
 >
     <Content />
 </PostLayout>

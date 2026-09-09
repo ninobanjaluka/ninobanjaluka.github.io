@@ -162,6 +162,11 @@ const homepageLd = [
             if (enLabel) enLabel.style.display = showingEn ? "none" : "";
             if (srLabel) srLabel.style.display = showingEn ? "" : "none";
             localStorage.setItem("post-lang", showingEn ? "sr" : "en");
+            if (showingEn) {
+                document.documentElement.setAttribute("data-lang-pref", "sr");
+            } else {
+                document.documentElement.removeAttribute("data-lang-pref");
+            }
         });
     }
     initHeroLangToggle();

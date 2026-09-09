@@ -94,7 +94,12 @@ const fullGraph = [...baseGraph, ...jsonLd];
 
         <!-- Canonical Link -->
         <link rel="canonical" href={canonicalURL} />
-        
+
+        <!-- Hreflang (both languages, same URL) -->
+        <link rel="alternate" hreflang="en" href={canonicalURL} />
+        <link rel="alternate" hreflang="sr" href={canonicalURL} />
+        <link rel="alternate" hreflang="x-default" href={canonicalURL} />
+
         <!-- Open Graph -->
         <meta property="og:type" content={type} />
         <meta property="og:url" content={canonicalURL} />
@@ -113,6 +118,20 @@ const fullGraph = [...baseGraph, ...jsonLd];
         <title>{title}</title>
         <StructuredData graph={fullGraph} />
         <slot name="head" />
+        <script is:inline>
+            (function() {
+                var lang = localStorage.getItem('post-lang');
+                if (lang === 'sr') {
+                    document.documentElement.setAttribute('data-lang-pref', 'sr');
+                }
+            })();
+        </script>
+        <style is:inline>
+            [data-lang-pref="sr"] [data-lang="en"] { display: none !important; }
+            [data-lang-pref="sr"] [data-lang="sr"] { display: block !important; }
+            [data-lang-pref="sr"] .lang-toggle [data-lang="en"] { display: none !important; }
+            [data-lang-pref="sr"] .lang-toggle [data-lang="sr"] { display: inline !important; }
+        </style>
     </head>
     <body>
         <a href="#main-content" class="skip-link">Skip to content</a>

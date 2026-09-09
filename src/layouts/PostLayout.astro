@@ -17,6 +17,7 @@ interface Props {
     coverImage?: string;
     SrContent?: any;
     srExcerpt?: string;
+    srTitle?: string;
 }
 
 const {
@@ -34,6 +35,7 @@ const {
     coverImage,
     SrContent,
     srExcerpt,
+    srTitle,
 } = Astro.props;
 
 const hasSr = !!SrContent;
@@ -141,7 +143,10 @@ const blogPostingLd = [
                 <LanguageToggle hasTranslation={hasSr} />
             </div>
 
-            <h1 class="post__title">{title}</h1>
+            <h1 class="post__title" data-lang="en">{title}</h1>
+            {hasSr && srTitle && (
+                <h1 class="post__title" data-lang="sr" style="display:none">{srTitle}</h1>
+            )}
             <p class="post__excerpt" data-lang="en">{excerpt}</p>
             {hasSr && srExcerpt && (
                 <p class="post__excerpt" data-lang="sr" style="display:none">{srExcerpt}</p>
@@ -265,6 +270,11 @@ const blogPostingLd = [
             if (enLabel) enLabel.style.display = showingEn ? 'none' : '';
             if (srLabel) srLabel.style.display = showingEn ? '' : 'none';
             localStorage.setItem('post-lang', showingEn ? 'sr' : 'en');
+            if (showingEn) {
+                document.documentElement.setAttribute('data-lang-pref', 'sr');
+            } else {
+                document.documentElement.removeAttribute('data-lang-pref');
+            }
         });
     }
     function initLightbox() {
