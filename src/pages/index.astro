@@ -129,16 +129,21 @@ const homepageLd = [
 
 <script>
     function initHeroLangToggle() {
-        const toggle =
-            document.querySelector<HTMLButtonElement>("[data-toggle-lang]");
-        if (!toggle) return;
-
         const enBlocks =
             document.querySelectorAll<HTMLElement>('[data-lang="en"]');
         const srBlocks = document.querySelectorAll<HTMLElement>(
             '[data-lang="sr"]:not([data-toggle-lang] [data-lang="sr"])',
         );
-        if (srBlocks.length === 0) return;
+
+        if (srBlocks.length === 0) {
+            document.documentElement.removeAttribute("data-lang-pref");
+            enBlocks.forEach((el) => (el.style.display = ""));
+            return;
+        }
+
+        const toggle =
+            document.querySelector<HTMLButtonElement>("[data-toggle-lang]");
+        if (!toggle) return;
 
         const enLabel = toggle.querySelector<HTMLElement>('[data-lang="en"]');
         const srLabel = toggle.querySelector<HTMLElement>('[data-lang="sr"]');

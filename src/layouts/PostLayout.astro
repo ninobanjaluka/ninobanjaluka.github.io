@@ -228,7 +228,7 @@ const blogPostingLd = [
             tags && tags.length > 0 && (
                 <footer class="post__footer">
                     {tags.map((tag) => (
-                        <a href={`/tags/${tag}`} class="post__tag">
+                        <a href={`/tags/${encodeURIComponent(tag)}`} class="post__tag">
                             {tag}
                         </a>
                     ))}
@@ -245,12 +245,18 @@ const blogPostingLd = [
 
 <script>
     function initLangToggle() {
-        const toggle = document.querySelector<HTMLButtonElement>('[data-toggle-lang]');
-        if (!toggle) return;
-
         const enBlocks = document.querySelectorAll<HTMLElement>('[data-lang="en"]');
         const srBlocks = document.querySelectorAll<HTMLElement>('[data-lang="sr"]:not([data-toggle-lang] [data-lang="sr"])');
-        if (srBlocks.length === 0) return;
+
+        // No Serbian content on this page: ignore saved preference so English stays visible.
+        if (srBlocks.length === 0) {
+            document.documentElement.removeAttribute('data-lang-pref');
+            enBlocks.forEach((el) => (el.style.display = ''));
+            return;
+        }
+
+        const toggle = document.querySelector<HTMLButtonElement>('[data-toggle-lang]');
+        if (!toggle) return;
 
         const enLabel = toggle.querySelector<HTMLElement>('[data-lang="en"]');
         const srLabel = toggle.querySelector<HTMLElement>('[data-lang="sr"]');

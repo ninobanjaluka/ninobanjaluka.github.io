@@ -29,7 +29,7 @@ export async function getStaticPaths() {
 const { tag } = Astro.params;
 const { posts } = Astro.props;
 
-const sorted = posts.sort(
+const sorted = [...posts].sort(
     (a, b) => {
         if (a.data.pinned && !b.data.pinned) return -1;
         if (!a.data.pinned && b.data.pinned) return 1;
